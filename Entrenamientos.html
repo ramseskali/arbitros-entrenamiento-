@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking de Rendimiento - Árbitros Estado Sucre</title>
+    <!-- Tailwind CSS para diseño moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen">
+
+    <!-- Header con espacio para Logos Institucionales -->
+    <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
+            
+            <!-- Logo Izquierdo + Título -->
+            <div class="flex items-center space-x-4">
+                <!-- Espacio para Logo de la Asociación -->
+                <div class="w-14 h-14 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+                    <img id="logo-asociacion" src="" alt="Logo" class="hidden w-full h-full object-contain">
+                    <span id="placeholder-logo" class="text-xs font-bold text-blue-600 text-center px-1">LOGO SUCRE</span>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-bold text-blue-900 leading-tight">Asociación de Árbitros del Estado Sucre</h1>
+                    <p class="text-xs text-gray-500 font-medium">Evaluaciones de Velocidad y Rendimiento Físico</p>
+                </div>
+            </div>
+
+            <!-- Navegación de Vistas -->
+            <nav class="flex bg-gray-100 p-1 rounded-xl border border-gray-200">
+                <button onclick="switchView('semanal')" id="btn-semanal" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-blue-700 text-white shadow-sm transition">Ranking Semanal</button>
+                <button onclick="switchView('general')" id="btn-general" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg text-gray-600 hover:text-blue-900 transition">Ranking General</button>
+                <button onclick="switchView('atletas')" id="btn-atletas" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg text-gray-600 hover:text-blue-900 transition">Árbitros</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        
+        <!-- VISTA 1: RANKING SEMANAL -->
+        <section id="view-semanal" class="space-y-6">
+            
+            <!-- Barra de Selección de Semana -->
+            <div class="bg-white border border-gray-200 p-4 md:p-5 rounded-xl shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-base font-bold text-blue-900">Evaluación Semanal</h2>
+                    <p class="text-xs text-gray-500">Selecciona el ciclo semanal para ingresar o consultar pruebas (Lunes, Martes, Miércoles).</p>
+                </div>
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <select id="select-semana" onchange="cambiarSemanaSeleccionada()" class="bg-gray-50 border border-gray-300 text-gray-800 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none w-full md:w-auto font-medium">
+                        <option value="">Cargando semanas...</option>
+                    </select>
+                    <button onclick="abrirModalNuevaSemana()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition shrink-0 shadow-sm">+ Nueva Semana</button>
+                </div>
+            </div>
+
+            <!-- Panel Unificado: Configuración de Pruebas y Tabla Completa del Ranking -->
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                
+                <!-- Encabezado de la Tabla & Botones de Acción -->
+                <div class="p-4 md:p-5 border-b border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div>
+                        <h3 class="font-bold text-gray-900 text-base">Tabla Oficial de Clasificación Semanal</h3>
+                        <p class="text-xs text-gray-500">Todos los árbitros en un único listado. Las ausencias puntúan 0.00 pts.</p>
+                    </div>
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <button onclick="abrirModalPrueba()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs font-semibold transition flex-1 sm:flex-none text-center">+ Añadir Prueba</button>
+                        <button onclick="guardarTiempos()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm flex-1 sm:flex-none text-center">💾 Guardar Tiempos</button>
+                    </div>
+                </div>
+
+                <!-- Lista de Pruebas Activas de la Semana (En una sola fila de chips/etiquetas) -->
+                <div class="px-5 py-3 bg-blue-50/40 border-b border-gray-200 flex items-center gap-2 overflow-x-auto">
+                    <span class="text-xs font-bold text-blue-900 uppercase shrink-0">Pruebas del ciclo:</span>
+                    <div id="lista-pruebas-semana" class="flex items-center gap-2">
+                        <span class="text-xs text-gray-400 italic">No hay pruebas agregadas</span>
+                    </div>
+                </div>
+
+                <!-- TABLA ÚNICA DE ÁRBITROS (Listado vertical completo) -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-600 text-xs font-bold uppercase tracking-wider border-b border-gray-200">
+                                <th class="py-3 px-4 w-16 text-center">Pos</th>
+                                <th class="py-3 px-4">Árbitro</th>
+                                <th class="py-3 px-4 text-center">Ficha</th>
+                                <th class="py-3 px-4 text-center">Promedio Semanal (0-10)</th>
+                                <th class="py-3 px-4 text-right">Registro de Tiempos</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-ranking-semanal" class="divide-y divide-gray-200 text-sm">
+                            <tr><td colspan="5" class="text-center py-8 text-gray-400 font-medium">Selecciona una semana activa para cargar la lista.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA 2: RANKING GENERAL (ALL-TIME) -->
+        <section id="view-general" class="hidden space-y-6">
+            <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm">
+                <h2 class="text-base font-bold text-blue-900">Ranking General Acumulado (All-Time)</h2>
+                <p class="text-xs text-gray-500">Tabla de rendimiento continuo basado en el promedio de todas las evaluaciones semanales.</p>
+            </div>
+            
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-600 text-xs font-bold uppercase tracking-wider border-b border-gray-200">
+                                <th class="py-3 px-6 w-20 text-center">Posición</th>
+                                <th class="py-3 px-6">Árbitro</th>
+                                <th class="py-3 px-6 text-center">Semanas Evaluadas</th>
+                                <th class="py-3 px-6 text-right">Nota Global (0-10)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-ranking-general" class="divide-y divide-gray-200 text-sm">
+                            <tr><td colspan="4" class="text-center py-8 text-gray-400">Calculando historial...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA 3: GESTIÓN DE ÁRBITROS -->
+        <section id="view-atletas" class="hidden space-y-6">
+            <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm flex justify-between items-center">
+                <div>
+                    <h2 class="text-base font-bold text-blue-900">Nómina de Árbitros</h2>
+                    <p class="text-xs text-gray-500">Registro oficial de los colegiados del Estado Sucre.</p>
+                </div>
+                <button onclick="abrirModalAtleta()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-xs font-semibold transition">+ Nuevo Árbitro</button>
+            </div>
+
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-600 text-xs font-bold uppercase tracking-wider border-b border-gray-200">
+                                <th class="py-3 px-6">Nombre y Apellido</th>
+                                <th class="py-3 px-6">Cédula / Ficha</th>
+                                <th class="py-3 px-6 text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-atletas" class="divide-y divide-gray-200 text-sm">
+                            <tr><td colspan="3" class="text-center py-8 text-gray-400">Cargando nómina de árbitros...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: NUEVA SEMANA -->
+    <div id="modal-semana" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white border border-gray-200 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
+            <h3 class="text-base font-bold text-blue-900">Crear Nueva Semana de Evaluación</h3>
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Nombre del Ciclo Semanal</label>
+                <input type="text" id="input-nombre-semana" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-800 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none" placeholder="Ej. Semana 1 - Pruebas Físicas">
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="cerrarModal('modal-semana')" class="px-4 py-2 text-xs font-semibold bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600">Cancelar</button>
+                <button onclick="crearSemana()" class="px-4 py-2 text-xs font-semibold bg-blue-700 hover:bg-blue-800 text-white rounded-lg shadow-sm">Guardar Semana</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: AÑADIR PRUEBA -->
+    <div id="modal-prueba" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white border border-gray-200 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
+            <h3 class="text-base font-bold text-blue-900">Añadir Prueba de Velocidad</h3>
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Día del Entrenamiento</label>
+                <select id="input-dia-prueba" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-800 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <option value="Lunes">Lunes</option>
+                    <option value="Martes">Martes</option>
+                    <option value="Miércoles">Miércoles</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Nombre de la Prueba</label>
+                <input type="text" id="input-nombre-prueba" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-800 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none" placeholder="Ej. Sprint 20m Aceleración">
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="cerrarModal('modal-prueba')" class="px-4 py-2 text-xs font-semibold bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600">Cancelar</button>
+                <button onclick="crearPrueba()" class="px-4 py-2 text-xs font-semibold bg-blue-700 hover:bg-blue-800 text-white rounded-lg shadow-sm">Añadir Prueba</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: NUEVO ÁRBITRO -->
+    <div id="modal-atleta" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white border border-gray-200 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl">
+            <h3 class="text-base font-bold text-blue-900">Registrar Nuevo Árbitro</h3>
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Nombre y Apellido</label>
+                <input type="text" id="input-nombre-atleta" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-800 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none" placeholder="Ej. Ramses Rincones">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Número de Cédula / Ficha</label>
+                <input type="text" id="input-ficha-atleta" class="w-full bg-gray-50 border border-gray-300 rounded-lg px-3 py-2 text-gray-800 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none" placeholder="Ej. V-12345678">
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="cerrarModal('modal-atleta')" class="px-4 py-2 text-xs font-semibold bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600">Cancelar</button>
+                <button onclick="guardarAtleta()" class="px-4 py-2 text-xs font-semibold bg-blue-700 hover:bg-blue-800 text-white rounded-lg shadow-sm">Guardar Árbitro</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE SDK & LÓGICA DEL SISTEMA -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, doc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBIoz8kDrJXG8Pvnxoh4Lq1vETR0q-h3XE",
+            authDomain: "entrenamientos-semanales.firebaseapp.com",
+            projectId: "entrenamientos-semanales",
+            storageBucket: "entrenamientos-semanales.firebasestorage.app",
+            messagingSenderId: "1070091947453",
+            appId: "1:1070091947453:web:67dda680f934ed786ed6d4",
+            measurementId: "G-SZQVHV3NW9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.atletas = [];
+        window.semanas = [];
+        window.pruebas = [];
+        window.resultados = {};
+        window.semanaActualId = null;
+
+        async function init() {
+            await cargarAtletas();
+            await cargarSemanas();
+            switchView('semanal');
+        }
+
+        window.switchView = function(view) {
+            document.getElementById('view-semanal').classList.add('hidden');
+            document.getElementById('view-general').classList.add('hidden');
+            document.getElementById('view-atletas').classList.add('hidden');
+            
+            document.getElementById('btn-semanal').className = "px-4 py-2 text-xs md:text-sm font-semibold rounded-lg text-gray-600 hover:text-blue-900 transition";
+            document.getElementById('btn-general').className = "px-4 py-2 text-xs md:text-sm font-semibold rounded-lg text-gray-600 hover:text-blue-900 transition";
+            document.getElementById('btn-atletas').className = "px-4 py-2 text-xs md:text-sm font-semibold rounded-lg text-gray-600 hover:text-blue-900 transition";
+
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+            document.getElementById(`btn-${view}`).className = "px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-blue-700 text-white shadow-sm transition";
+
+            if (view === 'general') calcularRankingGeneral();
+        }
+
+        // --- ÁRBITROS ---
+        async function cargarAtletas() {
+            const querySnapshot = await getDocs(collection(db, "atletas"));
+            window.atletas = [];
+            querySnapshot.forEach((docSnap) => {
+                window.atletas.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            renderAtletas();
+        }
+
+        window.guardarAtleta = async function() {
+            const nombre = document.getElementById('input-nombre-atleta').value.trim();
+            const ficha = document.getElementById('input-ficha-atleta').value.trim();
+            if(!nombre) return alert("Ingresa el nombre del árbitro.");
+
+            await addDoc(collection(db, "atletas"), { nombre, ficha });
+            cerrarModal('modal-atleta');
+            document.getElementById('input-nombre-atleta').value = '';
+            document.getElementById('input-ficha-atleta').value = '';
+            await cargarAtletas();
+            if(window.semanaActualId) cargarDatosSemanaActual();
+        }
+
+        window.eliminarAtleta = async function(id) {
+            if(confirm("¿Eliminar este árbitro del sistema?")) {
+                await deleteDoc(doc(db, "atletas", id));
+                await cargarAtletas();
+            }
+        }
+
+        function renderAtletas() {
+            const tbody = document.getElementById('tabla-atletas');
+            if(window.atletas.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center py-6 text-gray-400">No hay árbitros registrados.</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = window.atletas.map(a => `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="py-3 px-6 font-semibold text-gray-800">${a.nombre}</td>
+                    <td class="py-3 px-6 text-gray-500">${a.ficha || 'N/A'}</td>
+                    <td class="py-3 px-6 text-right">
+                        <button onclick="eliminarAtleta('${a.id}')" class="text-rose-600 hover:text-rose-800 text-xs font-semibold">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // --- SEMANAS Y PRUEBAS ---
+        async function cargarSemanas() {
+            const querySnapshot = await getDocs(collection(db, "semanas"));
+            window.semanas = [];
+            querySnapshot.forEach((docSnap) => {
+                window.semanas.push({ id: docSnap.id, ...docSnap.data() });
+            });
+            const select = document.getElementById('select-semana');
+            if(window.semanas.length === 0) {
+                select.innerHTML = `<option value="">No hay semanas creadas</option>`;
+                return;
+            }
+            select.innerHTML = window.semanas.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('');
+            if(!window.semanaActualId && window.semanas.length > 0) {
+                window.semanaA
