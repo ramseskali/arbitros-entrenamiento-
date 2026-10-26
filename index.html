@@ -11,6 +11,9 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <!-- ========================================================================== -->
+  <!-- 🎨 ZONA DE CONFIGURACIÓN DE COLORES Y ESTILOS CSS (MODIFICAR AQUÍ) -->
+  <!-- ========================================================================== -->
   <script>
     tailwind.config = {
       theme: {
@@ -19,6 +22,7 @@
             sans: ['Inter', 'sans-serif'],
           },
           colors: {
+            // Cambia estos códigos hexadecimales si deseas ajustar la paleta de colores principal
             sucre: {
               50: '#f0f7ff',
               100: '#e0effe',
@@ -37,6 +41,7 @@
     body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
     .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
   </style>
+  <!-- ========================================================================== -->
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
@@ -47,8 +52,13 @@
   <header class="bg-gradient-to-r from-sucre-900 via-sucre-800 to-sucre-700 text-white shadow-lg sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
       <div class="flex flex-wrap justify-between items-center gap-4">
+        
+        <!-- ========================================================================== -->
+        <!-- 🖼️ ZONA DEL LOGO INSTITUCIONAL (CAMBIAR AQUÍ LA IMAGEN O ÍCONO) -->
+        <!-- ========================================================================== -->
         <div class="flex items-center space-x-3">
-          <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-sucre-800 font-black text-xl shadow-md border-2 border-amber-400">
+          <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-sucre-800 font-black text-xl shadow-md border-2 border-amber-400 overflow-hidden">
+            <!-- Si deseas colocar una imagen en vez del escudo, reemplaza la etiqueta <i> por: <img src="URL_DE_TU_LOGO" class="w-full h-full object-cover"> -->
             <i class="fa-solid fa-shield-halved text-amber-500 text-2xl"></i>
           </div>
           <div>
@@ -60,6 +70,7 @@
             </p>
           </div>
         </div>
+        <!-- ========================================================================== -->
 
         <!-- AUTH BUTTONS -->
         <div class="flex items-center space-x-3">
@@ -92,7 +103,7 @@
           <i class="fa-solid fa-user-gear text-amber-600 text-2xl"></i>
           <div>
             <h3 class="font-bold text-amber-900">Modo Administrador Activo</h3>
-            <p class="text-xs text-amber-700">Tienes permisos para gestionar semanas, añadir árbitros y cargar resultados de pruebas.</p>
+            <p class="text-xs text-amber-700">Tienes permisos para gestionar semanas, añadir árbitros, eliminar registros y cargar resultados.</p>
           </div>
         </div>
         <div class="flex flex-wrap gap-2">
@@ -158,7 +169,7 @@
           <table class="w-full text-left border-collapse text-sm">
             <thead>
               <tr class="bg-slate-100 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-slate-200">
-                <th class="py-3.5 px-4 text-center w-16">Pos</th>
+                <th class="py-3.5 px-4 text-center w-16">Pos / Foto</th>
                 <th class="py-3.5 px-4">Árbitro / Atleta</th>
                 <th class="py-3.5 px-4 text-center">Categoría</th>
                 <th class="py-3.5 px-4 text-center">Pruebas Evaluadas</th>
@@ -225,15 +236,16 @@
           <table class="w-full text-left border-collapse text-sm">
             <thead>
               <tr class="bg-slate-100 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-slate-200">
-                <th class="py-3 px-4">Nombre Completo</th>
+                <th class="py-3 px-4">Árbitro</th>
                 <th class="py-3 px-4 text-center">Categoría</th>
                 <th class="py-3 px-4 text-center">Cédula / ID</th>
                 <th class="py-3 px-4 text-center">Estado</th>
+                <th class="py-3 px-4 text-center admin-col-header hidden">Acciones</th>
               </tr>
             </thead>
             <tbody id="referees-table-body" class="divide-y divide-slate-100">
               <tr>
-                <td colspan="4" class="py-6 text-center text-slate-400">No hay árbitros registrados.</td>
+                <td colspan="5" class="py-6 text-center text-slate-400">No hay árbitros registrados.</td>
               </tr>
             </tbody>
           </table>
@@ -284,7 +296,7 @@
   </div>
 
 
-  <!-- MODAL: ADD REFEREE (REDUCIDO A SALA Y CAMPO) -->
+  <!-- MODAL: ADD REFEREE (CON CAMPO DE FOTO Y CATEGORÍAS SALA/CAMPO) -->
   <div id="modal-add-referee" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
       <div class="bg-sucre-700 p-4 text-white flex justify-between items-center">
@@ -310,6 +322,10 @@
         <div>
           <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Cédula / Identificación</label>
           <input type="text" id="ref-doc" placeholder="V-12345678" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">URL de la Foto (Opcional)</label>
+          <input type="url" id="ref-photo" placeholder="https://ejemplo.com/foto.jpg" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
         </div>
         <div class="pt-2 flex justify-end gap-2">
           <button type="button" onclick="closeModal('modal-add-referee')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg">Cancelar</button>
@@ -420,7 +436,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
-      getFirestore, collection, getDocs, addDoc, doc, updateDoc, setDoc, onSnapshot, query, orderBy, serverTimestamp 
+      getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, setDoc, onSnapshot, query, orderBy, serverTimestamp 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { 
       getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged 
@@ -452,8 +468,8 @@
       categoryFilter: 'ALL'
     };
 
-    // Make DB and Auth actions globally available
-    window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEmailAndPassword, signOut };
+    // Make DB and Auth actions globally available (incluyendo deleteDoc)
+    window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, deleteDoc, signInWithEmailAndPassword, signOut };
 
     // --- AUTH LISTENERS ---
     onAuthStateChanged(auth, (user) => {
@@ -474,6 +490,7 @@
         adminBanner.classList.remove('hidden');
         if(btnAdminAddWeek) btnAdminAddWeek.classList.remove('hidden');
         if(btnAdminAddRef) btnAdminAddRef.classList.remove('hidden');
+        document.querySelectorAll('.admin-col-header').forEach(el => el.classList.remove('hidden'));
       } else {
         window.state.isAdmin = false;
         statusText.textContent = 'Modo Lectura (Público)';
@@ -483,9 +500,9 @@
         adminBanner.classList.add('hidden');
         if(btnAdminAddWeek) btnAdminAddWeek.classList.add('hidden');
         if(btnAdminAddRef) btnAdminAddRef.classList.add('hidden');
+        document.querySelectorAll('.admin-col-header').forEach(el => el.classList.add('hidden'));
       }
       
-      // Re-render to reflect admin button visibilities
       renderReferees();
       if(window.state.selectedWeekId) {
         renderWeekDetail(window.state.selectedWeekId);
@@ -507,8 +524,6 @@
     // Listen for Weeks
     onSnapshot(collection(db, "weeks"), (snapshot) => {
       window.state.weeks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      
-      // Sort weeks by date descending or created
       window.state.weeks.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
       renderWeeksList();
@@ -619,22 +634,33 @@
       }
     }
 
-    // --- DATA CREATION HANDLERS ---
+    // --- DATA CREATION & DELETION HANDLERS ---
     async function handleAddReferee(e) {
       e.preventDefault();
       const name = document.getElementById('ref-name').value;
       const category = document.getElementById('ref-category').value;
       const doc = document.getElementById('ref-doc').value || 'Sin DNI';
+      const photo = document.getElementById('ref-photo').value || '';
 
       try {
         await window.fb.addDoc(window.fb.collection(window.fb.db, "referees"), {
-          name, category, doc, status: 'Activo', createdAt: new Date().toISOString()
+          name, category, doc, photo, status: 'Activo', createdAt: new Date().toISOString()
         });
         showToast('Árbitro registrado con éxito', 'success');
         closeModal('modal-add-referee');
         document.getElementById('form-add-referee').reset();
       } catch (err) {
         showToast('Error al agregar árbitro: ' + err.message, 'error');
+      }
+    }
+
+    async function deleteReferee(refId) {
+      if(!confirm("¿Estás seguro de eliminar este árbitro de la nómina? Se perderán sus vínculos en pruebas.")) return;
+      try {
+        await window.fb.deleteDoc(window.fb.doc(window.fb.db, "referees", refId));
+        showToast('Árbitro eliminado correctamente', 'success');
+      } catch (err) {
+        showToast('Error al eliminar árbitro: ' + err.message, 'error');
       }
     }
 
@@ -683,7 +709,6 @@
       }
     }
 
-    // --- BORRAR PRUEBAS ---
     async function deleteTest(weekId, testId) {
       if(!confirm("¿Estás seguro de que deseas eliminar esta prueba de la semana?")) return;
 
@@ -819,24 +844,42 @@
       if(!tbody) return;
 
       if(window.state.referees.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-400">No hay árbitros registrados en el sistema.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">No hay árbitros registrados en el sistema.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = window.state.referees.map(ref => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="py-3 px-4 font-semibold text-slate-800">${ref.name}</td>
+      tbody.innerHTML = window.state.referees.map(ref => {
+        let adminActionTd = window.state.isAdmin ? `
           <td class="py-3 px-4 text-center">
-            <span class="bg-blue-50 text-sucre-800 text-xs px-2.5 py-1 rounded-full font-medium border border-blue-100">${ref.category}</span>
+            <button onclick="deleteReferee('${ref.id}')" class="text-xs bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold px-2.5 py-1.5 rounded-lg border border-rose-200 transition" title="Eliminar Árbitro">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
           </td>
-          <td class="py-3 px-4 text-center text-slate-500 font-mono text-xs">${ref.doc}</td>
-          <td class="py-3 px-4 text-center">
-            <span class="inline-flex items-center gap-1 text-emerald-600 font-bold text-xs">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Activo
-            </span>
-          </td>
-        </tr>
-      `).join('');
+        ` : '';
+
+        let avatarHtml = ref.photo && ref.photo.trim() !== '' 
+          ? `<img src="${ref.photo}" class="w-8 h-8 rounded-full object-cover border border-slate-300 shadow-sm">`
+          : `<div class="w-8 h-8 rounded-full bg-sucre-100 text-sucre-800 font-bold flex items-center justify-center text-xs">${ref.name.charAt(0)}</div>`;
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-3 px-4 font-semibold text-slate-800 flex items-center gap-3">
+              ${avatarHtml}
+              <span>${ref.name}</span>
+            </td>
+            <td class="py-3 px-4 text-center">
+              <span class="bg-blue-50 text-sucre-800 text-xs px-2.5 py-1 rounded-full font-medium border border-blue-100">${ref.category}</span>
+            </td>
+            <td class="py-3 px-4 text-center text-slate-500 font-mono text-xs">${ref.doc}</td>
+            <td class="py-3 px-4 text-center">
+              <span class="inline-flex items-center gap-1 text-emerald-600 font-bold text-xs">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Activo
+              </span>
+            </td>
+            ${adminActionTd}
+          </tr>
+        `;
+      }).join('');
     }
 
     function renderWeeksList() {
@@ -969,7 +1012,6 @@
             window.state.referees.forEach(ref => {
               if(marks[ref.id] !== undefined) {
                 const time = marks[ref.id];
-                // Formula Base 10: 10 * (bestTime / refTime)
                 const points = (10 * (bestTime / time)).toFixed(2);
 
                 contentHtml += `
@@ -1002,7 +1044,7 @@
       openModal('modal-add-test');
     }
 
-    // --- CÁLCULO DEL RANKING SEMANAL ---
+    // --- CÁLCULO DEL RANKING SEMANAL CON FOTO EN VEZ DE NÚMERO ---
     function calculateAndRenderRanking() {
       const tbody = document.getElementById('ranking-table-body');
       if(!tbody) return;
@@ -1018,7 +1060,6 @@
         return;
       }
 
-      // Filtrar árbitros por categoría (Todos, Sala o Campo)
       let filteredReferees = window.state.referees;
       if(window.state.categoryFilter !== 'ALL') {
         filteredReferees = filteredReferees.filter(r => r.category === window.state.categoryFilter);
@@ -1032,7 +1073,6 @@
       const tests = week.tests || [];
       const totalTestsCount = tests.length;
 
-      // Inicializar scores de los árbitros filtrados
       const refereeScores = {};
       filteredReferees.forEach(ref => {
         refereeScores[ref.id] = {
@@ -1042,7 +1082,6 @@
         };
       });
 
-      // Calcular puntos base 10 por cada prueba de la semana seleccionada
       tests.forEach(test => {
         const marks = test.marks || {};
         const times = Object.values(marks);
@@ -1059,7 +1098,6 @@
         }
       });
 
-      // Calcular promedio semanal (Suma de notas base 10 / Total de pruebas de la semana)
       const sortedRanking = Object.values(refereeScores).map(item => {
         const weeklyAverage = totalTestsCount > 0 ? (item.sumPointsBase10 / totalTestsCount) : 0;
         return { ...item, weeklyAverage };
@@ -1072,9 +1110,15 @@
         if(rank === 2) badge = `<span class="w-7 h-7 bg-slate-300 text-slate-800 rounded-full inline-flex items-center justify-center font-black text-xs shadow">2</span>`;
         if(rank === 3) badge = `<span class="w-7 h-7 bg-amber-700 text-white rounded-full inline-flex items-center justify-center font-black text-xs shadow">3</span>`;
 
+        // Reemplazar el número del ranking por la foto pequeña si existe
+        let positionDisplay = badge;
+        if(item.referee.photo && item.referee.photo.trim() !== '') {
+          positionDisplay = `<img src="${item.referee.photo}" alt="${item.referee.name}" class="w-9 h-9 rounded-full object-cover mx-auto border-2 border-amber-400 shadow-sm" title="Posición #${rank}">`;
+        }
+
         return `
           <tr class="hover:bg-slate-50 transition border-b border-slate-100">
-            <td class="py-3.5 px-4 text-center">${badge}</td>
+            <td class="py-3.5 px-4 text-center">${positionDisplay}</td>
             <td class="py-3.5 px-4">
               <p class="font-bold text-slate-800 text-sm">${item.referee.name}</p>
               <p class="text-[10px] text-slate-400">DNI: ${item.referee.doc}</p>
