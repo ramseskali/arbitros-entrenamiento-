@@ -49,7 +49,7 @@
       <div class="flex flex-wrap justify-between items-center gap-4">
         <div class="flex items-center space-x-3">
           <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-sucre-800 font-black text-xl shadow-md border-2 border-amber-400">
-            <i class="fa-solid fa-shield-halved text-amber-500 text-2xl"></i>
+            <i class="fa-solid fa-[#f59e0b] fa-shield-halved text-amber-500 text-2xl"></i>
           </div>
           <div>
             <h1 class="font-extrabold text-xl sm:text-2xl tracking-tight leading-none text-white">
@@ -110,32 +110,890 @@
 
     <!-- TABS NAVIGATION -->
     <div class="flex border-b border-slate-200 mb-6 space-x-2 overflow-x-auto pb-1">
-      <button id="tab-btn-ranking" onclick="switchTab('ranking')" class="tab-active py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 border-sucre-600 text-sucre-700 bg-sucre-50/50">
+      <button id="tab-btn-ranking" onclick="switchTab('ranking')" class="tab-active py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2">
         <i class="fa-solid fa-trophy text-amber-500"></i>
-        <span>Ranking Semanal</span>
+        <span>Ranking General</span>
       </button>
-      <button id="tab-btn-weeks" onclick="switchTab('weeks')" class="tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 text-slate-500 border-transparent hover:text-sucre-600">
+      <button id="tab-btn-weeks" onclick="switchTab('weeks')" class="tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2">
         <i class="fa-solid fa-stopwatch text-sucre-600"></i>
         <span>Pruebas por Semana</span>
       </button>
-      <button id="tab-btn-referees" onclick="switchTab('referees')" class="tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 text-slate-500 border-transparent hover:text-sucre-600">
+      <button id="tab-btn-referees" onclick="switchTab('referees')" class="tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2">
         <i class="fa-solid fa-users text-slate-600"></i>
         <span>Nómina de Árbitros</span>
       </button>
     </div>
 
-    <!-- TAB 1: RANKING SEMANAL -->
+    <!-- TAB 1: RANKING GENERAL -->
     <section id="tab-content-ranking" class="tab-content">
-      <div class="bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden space-y-4 p-5">
-        
-        <!-- CONTROLES DEL RANKING: SELECTOR DE SEMANA Y FILTRO DE CATEGORÍA -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-100 pb-4">
+      <div class="bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden">
+        <div class="p-5 bg-slate-50 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i class="fa-solid fa-medal text-amber-500"></i>
-              Clasificación Semanal
+              Tabla Posicional Acumulada
             </h2>
-            <p class="text-xs text-slate-500">Promedio de las notas individuales (Base 10) de cada prueba de la semana</p>
+            <p class="text-xs text-slate-500">Puntuación basada en los tiempos registrados en cada prueba</p>
           </div>
+          <div class="text-xs bg-blue-50 text-sucre-800 font-semibold px-3 py-1.5 rounded-full border border-blue-100">
+            Fórmula: Puntos = 10 × (Mejor Tiempo / Tiempo Árbitro)
+          </div>
+        </div>
 
-          <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-slate-100 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-slate-200">
+                <th class="py-3.5 px-4 text-center w-16">Pos</th>
+                <th class="py-3.5 px-4">Árbitro / Atleta</th>
+                <th class="py-3.5 px-4 text-center">Categoría</th>
+                <th class="py-3.5 px-4 text-center">Pruebas Realizadas</th>
+                <th class="py-3.5 px-4 text-right pr-6">Puntaje Total</th>
+              </tr>
+            </thead>
+            <tbody id="ranking-table-body" class="divide-y divide-slate-100">
+              <tr>
+                <td colspan="5" class="py-8 text-center text-slate-400">
+                  <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-sucre-500"></i>
+                  <p>Cargando datos del ranking...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: PRUEBAS POR SEMANA -->
+    <section id="tab-content-weeks" class="tab-content hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Sidebar: Selector de Semana -->
+        <div class="lg:col-span-1 space-y-4">
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+            <div class="flex justify-between items-center mb-3">
+              <h3 class="font-bold text-slate-800 text-sm">Semanas Evaluativas</h3>
+              <button id="btn-admin-add-week" onclick="openModal('modal-add-week')" class="hidden text-xs bg-sucre-50 text-sucre-700 hover:bg-sucre-100 p-1.5 rounded font-semibold transition">
+                <i class="fa-solid fa-plus"></i> Nueva
+              </button>
+            </div>
+            <div id="weeks-list" class="space-y-2 max-h-96 overflow-y-auto pr-1">
+              <p class="text-xs text-slate-400 text-center py-4">Sin semanas registradas</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main View: Detalle de Semana y Pruebas -->
+        <div class="lg:col-span-3 space-y-6">
+          <div id="week-detail-container" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div class="text-center py-12 text-slate-400">
+              <i class="fa-solid fa-calendar-week text-4xl mb-3 text-slate-300"></i>
+              <p>Selecciona una semana de la lista para ver las pruebas y registrar tiempos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: NÓMINA DE ÁRBITROS -->
+    <section id="tab-content-referees" class="tab-content hidden">
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="p-5 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+          <div>
+            <h2 class="font-bold text-slate-800">Atletas y Árbitros Registrados</h2>
+            <p class="text-xs text-slate-500">Listado oficial de la plantilla arbitral del Estado Sucre</p>
+          </div>
+          <button id="btn-admin-add-ref" onclick="openModal('modal-add-referee')" class="hidden bg-sucre-600 hover:bg-sucre-700 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Registrar Árbitro</span>
+          </button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-sm">
+            <thead>
+              <tr class="bg-slate-100 text-slate-600 font-semibold uppercase text-xs tracking-wider border-b border-slate-200">
+                <th class="py-3 px-4">Nombre Completo</th>
+                <th class="py-3 px-4 text-center">Categoría</th>
+                <th class="py-3 px-4 text-center">Cédula / ID</th>
+                <th class="py-3 px-4 text-center">Estado</th>
+              </tr>
+            </thead>
+            <tbody id="referees-table-body" class="divide-y divide-slate-100">
+              <tr>
+                <td colspan="4" class="py-6 text-center text-slate-400">No hay árbitros registrados.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+      <p class="font-semibold text-slate-300">Asociación de Árbitros de Fútbol del Estado Sucre</p>
+      <p>© 2026 Todos los derechos reservados. Sistema para el control y seguimiento de rendimiento físico.</p>
+    </div>
+  </footer>
+
+
+  <!-- MODAL: ADMIN LOGIN -->
+  <div id="modal-login" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
+      <div class="bg-sucre-800 p-6 text-white text-center relative">
+        <button onclick="closeModal('modal-login')" class="absolute top-4 right-4 text-blue-200 hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center mx-auto mb-3 shadow">
+          <i class="fa-solid fa-lock text-slate-900 text-xl"></i>
+        </div>
+        <h3 class="font-bold text-xl">Iniciar Sesión Admin</h3>
+        <p class="text-xs text-blue-200 mt-1">Solo personal autorizado para editar marcas</p>
+      </div>
+      <form id="form-login" onsubmit="handleLogin(event)" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Correo Electrónico</label>
+          <input type="email" id="login-email" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Contraseña</label>
+          <input type="password" id="login-password" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div class="pt-2">
+          <button type="submit" id="btn-submit-login" class="w-full bg-sucre-700 hover:bg-sucre-800 text-white font-bold py-2.5 rounded-lg shadow transition text-sm">
+            Ingresar al Sistema
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- MODAL: ADD REFEREE -->
+  <div id="modal-add-referee" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
+      <div class="bg-sucre-700 p-4 text-white flex justify-between items-center">
+        <h3 class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-user-plus"></i> Registrar Nuevo Árbitro
+        </h3>
+        <button onclick="closeModal('modal-add-referee')" class="text-blue-200 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="form-add-referee" onsubmit="handleAddReferee(event)" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre Completo</label>
+          <input type="text" id="ref-name" placeholder="Ej. Juan Pérez" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Categoría</label>
+          <select id="ref-category" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+            <option value="Principal Primera">Principal Primera</option>
+            <option value="Asistente Primera">Asistente Primera</option>
+            <option value="Nacional">Nacional</option>
+            <option value="Estadal">Estadal</option>
+            <option value="Aspirante">Aspirante</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Cédula / Identificación</label>
+          <input type="text" id="ref-doc" placeholder="V-12345678" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-add-referee')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg">Cancelar</button>
+          <button type="submit" class="px-4 py-2 bg-sucre-700 hover:bg-sucre-800 text-white text-xs font-bold rounded-lg shadow">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- MODAL: ADD WEEK -->
+  <div id="modal-add-week" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
+      <div class="bg-sucre-700 p-4 text-white flex justify-between items-center">
+        <h3 class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-calendar-plus"></i> Añadir Semana Evaluativa
+        </h3>
+        <button onclick="closeModal('modal-add-week')" class="text-blue-200 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="form-add-week" onsubmit="handleAddWeek(event)" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Título de la Semana</label>
+          <input type="text" id="week-title" placeholder="Ej. Semana 1 - Pretemporada" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Fecha de Inicio</label>
+          <input type="date" id="week-date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-add-week')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg">Cancelar</button>
+          <button type="submit" class="px-4 py-2 bg-sucre-700 hover:bg-sucre-800 text-white text-xs font-bold rounded-lg shadow">Crear Semana</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- MODAL: ADD TEST -->
+  <div id="modal-add-test" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
+      <div class="bg-sucre-700 p-4 text-white flex justify-between items-center">
+        <h3 class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-stopwatch"></i> Nueva Prueba Física
+        </h3>
+        <button onclick="closeModal('modal-add-test')" class="text-blue-200 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="form-add-test" onsubmit="handleAddTest(event)" class="p-6 space-y-4">
+        <input type="hidden" id="test-week-id">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre de la Prueba</label>
+          <input type="text" id="test-name" placeholder="Ej. 40 Metros Planos, Yo-Yo Test" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Unidad de Medida</label>
+          <select id="test-unit" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+            <option value="segundos">Segundos (s)</option>
+            <option value="minutos">Minutos (m)</option>
+          </select>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-add-test')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg">Cancelar</button>
+          <button type="submit" class="px-4 py-2 bg-sucre-700 hover:bg-sucre-800 text-white text-xs font-bold rounded-lg shadow">Agregar Prueba</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- MODAL: RECORD MARKS -->
+  <div id="modal-record-marks" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col">
+      <div class="bg-sucre-800 p-4 text-white flex justify-between items-center flex-shrink-0">
+        <div>
+          <h3 id="record-marks-title" class="font-bold text-sm">Cargar Tiempos / Marcas</h3>
+          <p id="record-marks-subtitle" class="text-xs text-blue-200">Prueba física</p>
+        </div>
+        <button onclick="closeModal('modal-record-marks')" class="text-blue-200 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto flex-grow space-y-4">
+        <div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded text-xs text-amber-800">
+          <strong>Importante:</strong> Ingresa el tiempo numérico para cada árbitro. El sistema asignará automáticamente la mejor marca y calculará la puntuación inversa correspondiente.
+        </div>
+
+        <input type="hidden" id="marks-week-id">
+        <input type="hidden" id="marks-test-id">
+
+        <div id="marks-input-list" class="space-y-3">
+          <!-- Dynamically filled with input controls -->
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-2 flex-shrink-0">
+        <button type="button" onclick="closeModal('modal-record-marks')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg">Cancelar</button>
+        <button type="button" onclick="saveMarks()" class="px-5 py-2 bg-sucre-700 hover:bg-sucre-800 text-white text-xs font-bold rounded-lg shadow">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- FIREBASE MODULE SCRIPT -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getFirestore, collection, getDocs, addDoc, doc, updateDoc, setDoc, onSnapshot, query, orderBy, serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { 
+      getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    // CREDECIALES CONFIGURADAS DEL USUARIO
+    const firebaseConfig = {
+      apiKey: "AIzaSyBIoz8kDrJXG8Pvnxoh4Lq1vETR0q-h3XE",
+      authDomain: "entrenamientos-semanales.firebaseapp.com",
+      projectId: "entrenamientos-semanales",
+      storageBucket: "entrenamientos-semanales.firebasestorage.app",
+      messagingSenderId: "1070091947453",
+      appId: "1:1070091947453:web:67dda680f934ed786ed6d4",
+      measurementId: "G-SZQVHV3NW9"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Global State
+    window.state = {
+      isAdmin: false,
+      referees: [],
+      weeks: [],
+      selectedWeekId: null
+    };
+
+    // Make DB and Auth actions globally available
+    // Make DB and Auth actions globally available
+window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEmailAndPassword, signOut };
+
+    // --- AUTH LISTENERS ---
+    onAuthStateChanged(auth, (user) => {
+      const statusText = document.getElementById('auth-status-text');
+      const indicator = document.getElementById('auth-indicator');
+      const btnLoginModal = document.getElementById('btn-login-modal');
+      const btnLogout = document.getElementById('btn-logout');
+      const adminBanner = document.getElementById('admin-banner');
+      const btnAdminAddWeek = document.getElementById('btn-admin-add-week');
+      const btnAdminAddRef = document.getElementById('btn-admin-add-ref');
+
+      if (user) {
+        window.state.isAdmin = true;
+        statusText.textContent = `Admin: ${user.email}`;
+        indicator.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse";
+        btnLoginModal.classList.add('hidden');
+        btnLogout.classList.remove('hidden');
+        adminBanner.classList.remove('hidden');
+        if(btnAdminAddWeek) btnAdminAddWeek.classList.remove('hidden');
+        if(btnAdminAddRef) btnAdminAddRef.classList.remove('hidden');
+      } else {
+        window.state.isAdmin = false;
+        statusText.textContent = 'Modo Lectura (Público)';
+        indicator.className = "w-2.5 h-2.5 rounded-full bg-slate-400";
+        btnLoginModal.classList.remove('hidden');
+        btnLogout.classList.add('hidden');
+        adminBanner.classList.add('hidden');
+        if(btnAdminAddWeek) btnAdminAddWeek.classList.add('hidden');
+        if(btnAdminAddRef) btnAdminAddRef.classList.add('hidden');
+      }
+      
+      // Re-render to reflect admin button visibilities
+      renderReferees();
+      if(window.state.selectedWeekId) {
+        renderWeekDetail(window.state.selectedWeekId);
+      }
+    });
+
+    // --- REALTIME DATA LISTENERS ---
+    
+    // Listen for Referees
+    onSnapshot(collection(db, "referees"), (snapshot) => {
+      window.state.referees = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderReferees();
+      calculateAndRenderRanking();
+    }, (error) => {
+      console.error("Error cargando árbitros:", error);
+      showToast("Error al cargar lista de árbitros", "error");
+    });
+
+    // Listen for Weeks
+    onSnapshot(collection(db, "weeks"), (snapshot) => {
+      window.state.weeks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      
+      // Sort weeks by date descending or created
+      window.state.weeks.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+      renderWeeksList();
+      calculateAndRenderRanking();
+
+      if (!window.state.selectedWeekId && window.state.weeks.length > 0) {
+        window.state.selectedWeekId = window.state.weeks[0].id;
+      }
+      
+      if (window.state.selectedWeekId) {
+        renderWeekDetail(window.state.selectedWeekId);
+      }
+    }, (error) => {
+      console.error("Error cargando semanas:", error);
+      showToast("Error al cargar semanas evaluativas", "error");
+    });
+
+  </script>
+
+  <!-- APPLICATION LOGIC / INTERACTIVE HANDLERS -->
+  <script>
+    // --- UI HELPERS & NOTIFICATIONS ---
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      let bg = 'bg-slate-800 text-white';
+      if(type === 'success') bg = 'bg-emerald-600 text-white';
+      if(type === 'error') bg = 'bg-rose-600 text-white';
+      
+      toast.className = `${bg} p-3 rounded-lg shadow-lg text-xs font-semibold flex items-center justify-between transition-all duration-300 transform translate-y-2 opacity-0`;
+      toast.innerHTML = `
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()" class="ml-3 text-slate-200 hover:text-white">&times;</button>
+      `;
+      
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      
+      document.getElementById('tab-btn-ranking').className = 'tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 text-slate-500 border-transparent hover:text-sucre-600';
+      document.getElementById('tab-btn-weeks').className = 'tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 text-slate-500 border-transparent hover:text-sucre-600';
+      document.getElementById('tab-btn-referees').className = 'tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 text-slate-500 border-transparent hover:text-sucre-600';
+
+      document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+      activeBtn.className = 'tab-active py-2.5 px-5 font-bold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 border-sucre-600 text-sucre-700 bg-sucre-50/50';
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function openLoginModal() {
+      openModal('modal-login');
+    }
+
+    // --- AUTH ACTIONS ---
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const pass = document.getElementById('login-password').value;
+      const btn = document.getElementById('btn-submit-login');
+
+      try {
+        btn.disabled = true;
+        btn.textContent = 'Iniciando sesión...';
+        await window.fb.signInWithEmailAndPassword(window.fb.auth, email, pass);
+        closeModal('modal-login');
+        showToast('Sesión de administrador iniciada correctamente', 'success');
+        document.getElementById('form-login').reset();
+      } catch (err) {
+        showToast('Error de autenticación: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Ingresar al Sistema';
+      }
+    }
+
+    async function handleLogout() {
+      try {
+        await window.fb.signOut(window.fb.auth);
+        showToast('Sesión cerrada correctamente', 'info');
+      } catch (err) {
+        showToast('Error al cerrar sesión', 'error');
+      }
+    }
+
+    // --- DATA CREATION HANDLERS ---
+    async function handleAddReferee(e) {
+      e.preventDefault();
+      const name = document.getElementById('ref-name').value;
+      const category = document.getElementById('ref-category').value;
+      const doc = document.getElementById('ref-doc').value || 'Sin DNI';
+
+      try {
+        await window.fb.addDoc(window.fb.collection(window.fb.db, "referees"), {
+          name, category, doc, status: 'Activo', createdAt: new Date().toISOString()
+        });
+        showToast('Árbitro registrado con éxito', 'success');
+        closeModal('modal-add-referee');
+        document.getElementById('form-add-referee').reset();
+      } catch (err) {
+        showToast('Error al agregar árbitro: ' + err.message, 'error');
+      }
+    }
+
+    async function handleAddWeek(e) {
+      e.preventDefault();
+      const title = document.getElementById('week-title').value;
+      const date = document.getElementById('week-date').value;
+
+      try {
+        await window.fb.addDoc(window.fb.collection(window.fb.db, "weeks"), {
+          title, date, tests: []
+        });
+        showToast('Semana agregada correctamente', 'success');
+        closeModal('modal-add-week');
+        document.getElementById('form-add-week').reset();
+      } catch (err) {
+        showToast('Error al añadir semana: ' + err.message, 'error');
+      }
+    }
+
+    async function handleAddTest(e) {
+      e.preventDefault();
+      const weekId = document.getElementById('test-week-id').value;
+      const name = document.getElementById('test-name').value;
+      const unit = document.getElementById('test-unit').value;
+
+      const week = window.state.weeks.find(w => w.id === weekId);
+      if(!week) return;
+
+      const newTest = {
+        id: 'test_' + Date.now(),
+        name, unit, marks: {} // { refereeId: markValue }
+      };
+
+      const updatedTests = [...(week.tests || []), newTest];
+
+      try {
+        await window.fb.updateDoc(window.fb.doc(window.fb.db, "weeks", weekId), {
+          tests: updatedTests
+        });
+        showToast('Prueba agregada a la semana', 'success');
+        closeModal('modal-add-test');
+        document.getElementById('form-add-test').reset();
+      } catch (err) {
+        showToast('Error al agregar prueba: ' + err.message, 'error');
+      }
+    }
+
+    // --- MARKS RECORDING & CALCULATION ---
+    function openRecordMarksModal(weekId, testId) {
+      const week = window.state.weeks.find(w => w.id === weekId);
+      if(!week) return;
+      const test = (week.tests || []).find(t => t.id === testId);
+      if(!test) return;
+
+      document.getElementById('marks-week-id').value = weekId;
+      document.getElementById('marks-test-id').value = testId;
+      document.getElementById('record-marks-title').textContent = `Tiempos: ${test.name}`;
+      document.getElementById('record-marks-subtitle').textContent = `${week.title} (${test.unit})`;
+
+      const container = document.getElementById('marks-input-list');
+      container.innerHTML = '';
+
+      if(window.state.referees.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-500 py-4 text-center">No existen árbitros registrados para asignar tiempos.</p>`;
+      } else {
+        window.state.referees.forEach(ref => {
+          const currentMark = (test.marks && test.marks[ref.id]) !== undefined ? test.marks[ref.id] : '';
+          const row = document.createElement('div');
+          row.className = 'flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200';
+          row.innerHTML = `
+            <div>
+              <p class="font-bold text-xs text-slate-800">${ref.name}</p>
+              <p class="text-[10px] text-slate-500">${ref.category}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <input type="number" step="0.01" min="0" placeholder="Tiempo" value="${currentMark}" data-ref-id="${ref.id}" class="mark-input w-28 px-3 py-1.5 border border-slate-300 rounded text-sm text-right focus:ring-2 focus:ring-sucre-500 outline-none">
+              <span class="text-xs text-slate-500">${test.unit === 'segundos' ? 's' : 'm'}</span>
+            </div>
+          `;
+          container.appendChild(row);
+        });
+      }
+
+      openModal('modal-record-marks');
+    }
+
+    async function saveMarks() {
+      const weekId = document.getElementById('marks-week-id').value;
+      const testId = document.getElementById('marks-test-id').value;
+
+      const week = window.state.weeks.find(w => w.id === weekId);
+      if(!week) return;
+
+      const inputs = document.querySelectorAll('.mark-input');
+      const marksObj = {};
+
+      inputs.forEach(input => {
+        const refId = input.getAttribute('data-ref-id');
+        const val = parseFloat(input.value);
+        if(!isNaN(val) && val > 0) {
+          marksObj[refId] = val;
+        }
+      });
+
+      const updatedTests = (week.tests || []).map(t => {
+        if(t.id === testId) {
+          return { ...t, marks: marksObj };
+        }
+        return t;
+      });
+
+      try {
+        await window.fb.updateDoc(window.fb.doc(window.fb.db, "weeks", weekId), {
+          tests: updatedTests
+        });
+        showToast('Tiempos guardados con éxito', 'success');
+        closeModal('modal-record-marks');
+      } catch (err) {
+        showToast('Error al guardar marcas: ' + err.message, 'error');
+      }
+    }
+
+    // --- RENDERING FUNCTIONS ---
+
+    function renderReferees() {
+      const tbody = document.getElementById('referees-table-body');
+      if(!tbody) return;
+
+      if(window.state.referees.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-slate-400">No hay árbitros registrados en el sistema.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = window.state.referees.map(ref => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="py-3 px-4 font-semibold text-slate-800">${ref.name}</td>
+          <td class="py-3 px-4 text-center">
+            <span class="bg-blue-50 text-sucre-800 text-xs px-2.5 py-1 rounded-full font-medium border border-blue-100">${ref.category}</span>
+          </td>
+          <td class="py-3 px-4 text-center text-slate-500 font-mono text-xs">${ref.doc}</td>
+          <td class="py-3 px-4 text-center">
+            <span class="inline-flex items-center gap-1 text-emerald-600 font-bold text-xs">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Activo
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderWeeksList() {
+      const container = document.getElementById('weeks-list');
+      if(!container) return;
+
+      if(window.state.weeks.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">No hay semanas evaluativas registradas.</p>`;
+        return;
+      }
+
+      container.innerHTML = window.state.weeks.map(w => {
+        const isSelected = w.id === window.state.selectedWeekId;
+        const activeClass = isSelected ? 'bg-sucre-700 text-white shadow-sm' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200';
+        return `
+          <button onclick="selectWeek('${w.id}')" class="w-full text-left p-3 rounded-lg text-xs font-semibold transition ${activeClass} flex justify-between items-center">
+            <div>
+              <p class="font-bold">${w.title}</p>
+              <p class="${isSelected ? 'text-blue-200' : 'text-slate-400'} text-[10px] mt-0.5">${w.date || 'Sin fecha'}</p>
+            </div>
+            <span class="text-[10px] ${isSelected ? 'bg-sucre-800 text-white' : 'bg-slate-200 text-slate-600'} px-2 py-0.5 rounded-full">
+              ${(w.tests || []).length} pruebas
+            </span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectWeek(weekId) {
+      window.state.selectedWeekId = weekId;
+      renderWeeksList();
+      renderWeekDetail(weekId);
+    }
+
+    function renderWeekDetail(weekId) {
+      const container = document.getElementById('week-detail-container');
+      if(!container) return;
+
+      const week = window.state.weeks.find(w => w.id === weekId);
+      if(!week) {
+        container.innerHTML = `<p class="text-xs text-slate-400 text-center py-8">Semana no encontrada.</p>`;
+        return;
+      }
+
+      const tests = week.tests || [];
+
+      let adminTestBtn = window.state.isAdmin ? `
+        <button onclick="openModalAddTest('${week.id}')" class="bg-sucre-700 hover:bg-sucre-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition flex items-center gap-1">
+          <i class="fa-solid fa-plus"></i> Nueva Prueba
+        </button>
+      ` : '';
+
+      let contentHtml = `
+        <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-slate-800">${week.title}</h2>
+            <p class="text-xs text-slate-500">Fecha inicio: ${week.date}</p>
+          </div>
+          ${adminTestBtn}
+        </div>
+      `;
+
+      if(tests.length === 0) {
+        contentHtml += `
+          <div class="text-center py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+            <p class="text-xs text-slate-500 mb-2">No hay pruebas agregadas a esta semana.</p>
+            ${window.state.isAdmin ? `<button onclick="openModalAddTest('${week.id}')" class="text-xs text-sucre-700 font-bold hover:underline">Añadir la primera prueba</button>` : ''}
+          </div>
+        `;
+      } else {
+        contentHtml += `<div class="space-y-6">`;
+        
+        tests.forEach(test => {
+          const marks = test.marks || {};
+          const recordedRefIds = Object.keys(marks);
+
+          // Find best mark (minimum time)
+          let bestTime = null;
+          if(recordedRefIds.length > 0) {
+            bestTime = Math.min(...Object.values(marks));
+          }
+
+          let adminRecordBtn = window.state.isAdmin ? `
+            <button onclick="openRecordMarksModal('${week.id}', '${test.id}')" class="text-xs bg-amber-50 text-amber-700 hover:bg-amber-100 font-bold px-3 py-1.5 rounded-lg border border-amber-200 transition flex items-center gap-1">
+              <i class="fa-solid fa-pen-to-square"></i> Cargar/Editar Marcas
+            </button>
+          ` : '';
+
+          contentHtml += `
+            <div class="bg-slate-50 rounded-xl border border-slate-200 p-4">
+              <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-8 h-8 bg-sucre-100 text-sucre-700 rounded-lg flex items-center justify-center font-bold text-xs">
+                    <i class="fa-solid fa-stopwatch"></i>
+                  </span>
+                  <div>
+                    <h4 class="font-bold text-sm text-slate-800">${test.name}</h4>
+                    <span class="text-[10px] text-slate-500 uppercase font-semibold">Unidad: ${test.unit}</span>
+                  </div>
+                </div>
+                ${adminRecordBtn}
+              </div>
+
+              ${bestTime !== null ? `
+                <div class="mb-3 text-xs bg-emerald-50 text-emerald-800 p-2 rounded-lg border border-emerald-100 flex items-center gap-2">
+                  <i class="fa-solid fa-trophy text-amber-500"></i>
+                  <span><strong>Mejor Marca de la Prueba:</strong> ${bestTime} ${test.unit === 'segundos' ? 's' : 'm'}</span>
+                </div>
+              ` : ''}
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs bg-white rounded-lg border border-slate-200 overflow-hidden">
+                  <thead>
+                    <tr class="bg-slate-100 text-slate-600 font-semibold border-b border-slate-200">
+                      <th class="py-2 px-3">Árbitro</th>
+                      <th class="py-2 px-3 text-center">Tiempo Registrado</th>
+                      <th class="py-2 px-3 text-right">Puntos Calculados</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+          `;
+
+          if(recordedRefIds.length === 0) {
+            contentHtml += `<tr><td colspan="3" class="py-4 text-center text-slate-400">No se han registrado marcas para esta prueba.</td></tr>`;
+          } else {
+            window.state.referees.forEach(ref => {
+              if(marks[ref.id] !== undefined) {
+                const time = marks[ref.id];
+                // Formula: 10 * (best_time / ref_time)
+                const points = (10 * (bestTime / time)).toFixed(2);
+
+                contentHtml += `
+                  <tr>
+                    <td class="py-2 px-3 font-semibold text-slate-700">${ref.name}</td>
+                    <td class="py-2 px-3 text-center font-mono font-bold text-slate-800">${time} ${test.unit === 'segundos' ? 's' : 'm'}</td>
+                    <td class="py-2 px-3 text-right font-bold text-sucre-700">+${points} pts</td>
+                  </tr>
+                `;
+              }
+            });
+          }
+
+          contentHtml += `
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        });
+
+        contentHtml += `</div>`;
+      }
+
+      container.innerHTML = contentHtml;
+    }
+
+    function openModalAddTest(weekId) {
+      document.getElementById('test-week-id').value = weekId;
+      openModal('modal-add-test');
+    }
+
+    // --- CALCULATE GLOBAL RANKING ---
+    function calculateAndRenderRanking() {
+      const tbody = document.getElementById('ranking-table-body');
+      if(!tbody) return;
+
+      if(window.state.referees.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No hay árbitros registrados para generar la tabla.</td></tr>`;
+        return;
+      }
+
+      // Initialize map of total points per referee
+      const refereeScores = {};
+      window.state.referees.forEach(ref => {
+        refereeScores[ref.id] = {
+          referee: ref,
+          totalPoints: 0,
+          testsCount: 0
+        };
+      });
+
+      // Iterate all weeks and tests to calculate total points
+      window.state.weeks.forEach(week => {
+        (week.tests || []).forEach(test => {
+          const marks = test.marks || {};
+          const times = Object.values(marks);
+          if(times.length > 0) {
+            const bestTime = Math.min(...times);
+            Object.keys(marks).forEach(refId => {
+              if(refereeScores[refId]) {
+                const refTime = marks[refId];
+                if(refTime > 0) {
+                  const points = 10 * (bestTime / refTime);
+                  refereeScores[refId].totalPoints += points;
+                  refereeScores[refId].testsCount += 1;
+                }
+              }
+            });
+          }
+        });
+      });
+
+      // Convert to array and sort by score descending
+      const sortedRanking = Object.values(refereeScores).sort((a, b) => b.totalPoints - a.totalPoints);
+
+      tbody.innerHTML = sortedRanking.map((item, index) => {
+        const rank = index + 1;
+        let badge = `<span class="font-bold text-slate-500">${rank}</span>`;
+        if(rank === 1) badge = `<span class="w-7 h-7 bg-amber-400 text-slate-900 rounded-full inline-flex items-center justify-center font-black text-xs shadow"><i class="fa-solid fa-trophy"></i></span>`;
+        if(rank === 2) badge = `<span class="w-7 h-7 bg-slate-300 text-slate-800 rounded-full inline-flex items-center justify-center font-black text-xs shadow">2</span>`;
+        if(rank === 3) badge = `<span class="w-7 h-7 bg-amber-700 text-white rounded-full inline-flex items-center justify-center font-black text-xs shadow">3</span>`;
+
+        return `
+          <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+            <td class="py-3.5 px-4 text-center">${badge}</td>
+            <td class="py-3.5 px-4">
+              <p class="font-bold text-slate-800 text-sm">${item.referee.name}</p>
+              <p class="text-[10px] text-slate-400">DNI: ${item.referee.doc}</p>
+            </td>
+            <td class="py-3.5 px-4 text-center">
+              <span class="bg-blue-50 text-sucre-800 text-xs px-2.5 py-1 rounded-full font-medium border border-blue-100">${item.referee.category}</span>
+            </td>
+            <td class="py-3.5 px-4 text-center font-medium text-slate-600">${item.testsCount} pruebas</td>
+            <td class="py-3.5 px-4 text-right pr-6">
+              <span class="font-black text-sucre-700 text-base">${item.totalPoints.toFixed(2)}</span>
+              <span class="text-xs text-slate-400 font-semibold"> pts</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>
