@@ -951,16 +951,18 @@ window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEm
           const times = Object.values(marks);
           if(times.length > 0) {
             const bestTime = Math.min(...times);
-            Object.keys(marks).forEach(refId => {
-              if(refereeScores[refId]) {
-                const refTime = marks[refId];
-                if(refTime > 0) {
-                  const points = 10 * (bestTime / refTime);
-                  refereeScores[refId].totalPoints += points;
-                  refereeScores[refId].testsCount += 1;
-                }
-              }
-            });
+           // NUEVO CÓDIGO AJUSTADO EN BASE 10:
+Object.keys(marks).forEach(refId => {
+  if(refereeScores[refId]) {
+    const refTime = marks[refId];
+    if(refTime > 0) {
+      // 1. Nota de la prueba en escala de 10 (Mejor tiempo = 10 pts)
+      const pointsBase10 = 10 * (bestTime / refTime);
+      refereeScores[refId].totalPoints += pointsBase10;
+      refereeScores[refId].testsCount += 1;
+    }
+  }
+});
           }
         });
       });
