@@ -440,7 +440,8 @@
     };
 
     // Make DB and Auth actions globally available
-    window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc };
+    // Make DB and Auth actions globally available
+window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEmailAndPassword, signOut };
 
     // --- AUTH LISTENERS ---
     onAuthStateChanged(auth, (user) => {
