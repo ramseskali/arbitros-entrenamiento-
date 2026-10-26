@@ -3,153 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranking de Rendimiento - Árbitros Estado Sucre</title>
-    <!-- Tailwind CSS para diseño moderno -->
+    <title>Asociación de Árbitros del Estado Sucre - Ranking de Velocidad</title>
+    <!-- Tailwind CSS para un diseño profesional y responsivo -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800 min-h-screen">
+<body class="bg-gray-100 text-gray-800 min-h-screen flex flex-col justify-between">
 
-    <!-- Header con espacio para Logos Institucionales -->
-    <header class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
-            
-            <!-- Logo Izquierdo + Título -->
-            <div class="flex items-center space-x-4">
-                <!-- Espacio para Logo de la Asociación -->
-                <div class="w-14 h-14 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
-                    <img id="logo-asociacion" src="" alt="Logo" class="hidden w-full h-full object-contain">
-                    <span id="placeholder-logo" class="text-xs font-bold text-blue-600 text-center px-1">LOGO SUCRE</span>
+    <!-- Header Institucional -->
+    <header class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-900 text-white font-bold p-3 rounded-lg shadow text-center tracking-wider text-xs">
+                    LOGO<br>SUCRE
                 </div>
                 <div>
-                    <h1 class="text-lg md:text-xl font-bold text-blue-900 leading-tight">Asociación de Árbitros del Estado Sucre</h1>
+                    <h1 class="text-xl font-bold text-blue-900 leading-tight">Asociación de Árbitros del Estado Sucre</h1>
                     <p class="text-xs text-gray-500 font-medium">Evaluaciones de Velocidad y Rendimiento Físico</p>
                 </div>
             </div>
-
-            <!-- Navegación de Vistas -->
-            <nav class="flex bg-gray-100 p-1 rounded-xl border border-gray-200">
-                <button onclick="switchView('semanal')" id="btn-semanal" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-blue-700 text-white shadow-sm transition">Ranking Semanal</button>
-                <button onclick="switchView('general')" id="btn-general" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg text-gray-600 hover:text-blue-900 transition">Ranking General</button>
-                <button onclick="switchView('atletas')" id="btn-atletas" class="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg text-gray-600 hover:text-blue-900 transition">Árbitros</button>
-            </nav>
+            <!-- Botón de Estado / Acceso Admin -->
+            <div id="auth-container" class="flex items-center gap-2">
+                <span id="admin-status" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-200 text-gray-700">Modo Lectura</span>
+                <button id="btn-open-login" onclick="toggleLoginModal()" class="text-xs bg-blue-900 hover:bg-blue-800 text-white font-medium px-3 py-2 rounded-lg transition">Acceso Admin</button>
+            </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <main class="max-w-7xl mx-auto px-4 py-6">
-        
-        <!-- VISTA 1: RANKING SEMANAL -->
-        <section id="view-semanal" class="space-y-6">
-            
-            <!-- Barra de Selección de Semana -->
-            <div class="bg-white border border-gray-200 p-4 md:p-5 rounded-xl shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
+    <!-- Navegación de Vistas -->
+    <nav class="max-w-7xl mx-auto px-4 w-full mt-6">
+        <div class="flex space-x-2 border-b border-gray-200 pb-3">
+            <button onclick="switchTab('semanal')" id="tab-semanal" class="px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white shadow-sm transition">Ranking Semanal</button>
+            <button onclick="switchTab('general')" id="tab-general" class="px-4 py-2 text-sm font-semibold rounded-lg text-gray-600 hover:bg-gray-200 transition">Ranking General</button>
+            <button onclick="switchTab('arbitros')" id="tab-arbitros" class="px-4 py-2 text-sm font-semibold rounded-lg text-gray-600 hover:bg-gray-200 transition">Árbitros</button>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <main class="max-w-7xl mx-auto px-4 w-full my-6 flex-grow">
+
+        <!-- VISTA: RANKING SEMANAL -->
+        <div id="view-semanal" class="space-y-6">
+            <!-- Selector de Ciclo Semanal -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
-                    <h2 class="text-base font-bold text-blue-900">Evaluación Semanal</h2>
+                    <h2 class="text-lg font-bold text-gray-900">Evaluación Semanal</h2>
                     <p class="text-xs text-gray-500">Selecciona el ciclo semanal para ingresar o consultar pruebas (Lunes, Martes, Miércoles).</p>
                 </div>
                 <div class="flex items-center gap-3 w-full md:w-auto">
-                    <select id="select-semana" onchange="cambiarSemanaSeleccionada()" class="bg-gray-50 border border-gray-300 text-gray-800 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none w-full md:w-auto font-medium">
+                    <select id="select-semana" onchange="cargarDatosSemana()" class="w-full md:w-64 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600">
                         <option value="">Cargando semanas...</option>
                     </select>
-                    <button onclick="abrirModalNuevaSemana()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-xs md:text-sm font-semibold transition shrink-0 shadow-sm">+ Nueva Semana</button>
+                    <!-- Botón protegido para administradores -->
+                    <button onclick="abrirModalSemana()" class="admin-action hidden whitespace-nowrap bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg shadow transition">+ Nueva Semana</button>
                 </div>
             </div>
 
-            <!-- Panel Unificado: Configuración de Pruebas y Tabla Completa del Ranking -->
-            <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-                
-                <!-- Encabezado de la Tabla & Botones de Acción -->
-                <div class="p-4 md:p-5 border-b border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <!-- Panel de Pruebas y Clasificación -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="p-5 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
-                        <h3 class="font-bold text-gray-900 text-base">Tabla Oficial de Clasificación Semanal</h3>
+                        <h3 class="text-base font-bold text-gray-900">Tabla Oficial de Clasificación Semanal</h3>
                         <p class="text-xs text-gray-500">Todos los árbitros en un único listado. Las ausencias puntúan 0.00 pts.</p>
                     </div>
-                    <div class="flex items-center gap-2 w-full sm:w-auto">
-                        <button onclick="abrirModalPrueba()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs font-semibold transition flex-1 sm:flex-none text-center">+ Añadir Prueba</button>
-                        <button onclick="guardarTiempos()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm flex-1 sm:flex-none text-center">💾 Guardar Tiempos</button>
+                    <div class="flex items-center gap-2 admin-action hidden">
+                        <button onclick="abrirModalPrueba()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-2 rounded-lg border border-gray-300 transition">+ Añadir Prueba</button>
+                        <button onclick="guardarTiempos()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2 rounded-lg shadow transition">💾 Guardar Tiempos</button>
                     </div>
                 </div>
 
-                <!-- Lista de Pruebas Activas de la Semana (En una sola fila de chips/etiquetas) -->
-                <div class="px-5 py-3 bg-blue-50/40 border-b border-gray-200 flex items-center gap-2 overflow-x-auto">
-                    <span class="text-xs font-bold text-blue-900 uppercase shrink-0">Pruebas del ciclo:</span>
-                    <div id="lista-pruebas-semana" class="flex items-center gap-2">
-                        <span class="text-xs text-gray-400 italic">No hay pruebas agregadas</span>
-                    </div>
+                <!-- Cabecera de Pruebas Dinámicas -->
+                <div id="contenedor-pruebas-info" class="bg-blue-50 px-5 py-2.5 border-b border-blue-100 text-xs font-semibold text-blue-900">
+                    PRUEBAS DEL CICLO: No hay pruebas agregadas
                 </div>
 
-                <!-- TABLA ÚNICA DE ÁRBITROS (Listado vertical completo) -->
+                <!-- Tabla Interactiva -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-gray-100 text-gray-600 text-xs font-bold uppercase tracking-wider border-b border-gray-200">
-                                <th class="py-3 px-4 w-16 text-center">Pos</th>
+                            <tr class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider border-b border-gray-200">
+                                <th class="py-3 px-4">Pos</th>
                                 <th class="py-3 px-4">Árbitro</th>
-                                <th class="py-3 px-4 text-center">Ficha</th>
+                                <th class="py-3 px-4">Ficha</th>
                                 <th class="py-3 px-4 text-center">Promedio Semanal (0-10)</th>
-                                <th class="py-3 px-4 text-right">Registro de Tiempos</th>
+                                <th id="th-columnas-pruebas" class="py-3 px-4">Registros de Tiempos (seg)</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-ranking-semanal" class="divide-y divide-gray-200 text-sm">
-                            <tr><td colspan="5" class="text-center py-8 text-gray-400 font-medium">Selecciona una semana activa para cargar la lista.</td></tr>
+                        <tbody id="tabla-ranking-body" class="divide-y divide-gray-200 text-sm">
+                            <tr>
+                                <td colspan="5" class="py-6 text-center text-gray-400">Selecciona una semana activa para cargar la lista.</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- VISTA 2: RANKING GENERAL (ALL-TIME) -->
-        <section id="view-general" class="hidden space-y-6">
-            <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm">
-                <h2 class="text-base font-bold text-blue-900">Ranking General Acumulado (All-Time)</h2>
-                <p class="text-xs text-gray-500">Tabla de rendimiento continuo basado en el promedio de todas las evaluaciones semanales.</p>
-            </div>
-            
-            <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+        <!-- VISTA: RANKING GENERAL -->
+        <div id="view-general" class="hidden space-y-6">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                <h2 class="text-lg font-bold text-gray-900">Ranking Histórico y General</h2>
+                <p class="text-xs text-gray-500 mb-4">Acumulado de rendimiento de todas las semanas evaluadas en la temporada.</p>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-gray-100 text-gray-600 text-xs font-bold uppercase tracking-wider border-b border-gray-200">
-                                <th class="py-3 px-6 w-20 text-center">Posición</th>
-                                <th class="py-3 px-6">Árbitro</th>
-                                <th class="py-3 px-6 text-center">Semanas Evaluadas</th>
-                                <th class="py-3 px-6 text-right">Nota Global (0-10)</th>
+                            <tr class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider border-b border-gray-200">
+                                <th class="py-3 px-4">Pos</th>
+                                <th class="py-3 px-4">Árbitro</th>
+                                <th class="py-3 px-4">Ficha</th>
+                                <th class="py-3 px-4 text-center">Semanas Evaluadas</th>
+                                <th class="py-3 px-4 text-center">Promedio General Acumulado</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-ranking-general" class="divide-y divide-gray-200 text-sm">
-                            <tr><td colspan="4" class="text-center py-8 text-gray-400">Calculando historial...</td></tr>
+                        <tbody id="tabla-general-body" class="divide-y divide-gray-200 text-sm">
+                            <tr><td colspan="5" class="py-6 text-center text-gray-400">Calculando ranking general...</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- VISTA 3: GESTIÓN DE ÁRBITROS -->
-        <section id="view-atletas" class="hidden space-y-6">
-            <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm flex justify-between items-center">
+        <!-- VISTA: GESTIÓN DE ÁRBITROS -->
+        <div id="view-arbitros" class="hidden space-y-6">
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex justify-between items-center">
                 <div>
-                    <h2 class="text-base font-bold text-blue-900">Nómina de Árbitros</h2>
-                    <p class="text-xs text-gray-500">Registro oficial de los colegiados del Estado Sucre.</p>
+                    <h2 class="text-lg font-bold text-gray-900">Directorio de Árbitros</h2>
+                    <p class="text-xs text-gray-500">Listado oficial de jueces registrados en la asociación.</p>
                 </div>
-                <button onclick="abrirModalAtleta()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg text-xs font-semibold transition">+ Nuevo Árbitro</button>
+                <button onclick="abrirModalArbitro()" class="admin-action hidden bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg shadow transition">+ Registrar Árbitro</button>
             </div>
 
-            <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-gray-100 text-gray-600 text-xs font-bold uppercase tracking-wider border-b border-gray-200">
-                                <th class="py-3 px-6">Nombre y Apellido</th>
-                                <th class="py-3 px-6">Cédula / Ficha</th>
-                                <th class="py-3 px-6 text-right">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabla-atletas" class="divide-y divide-gray-200 text-sm">
-                            <tr><td colspan="3" class="text-center py-8 text-gray-400">Cargando nómina de árbitros...</td></tr>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-600 text-xs uppercase tracking-wider border-b border-gray-200">
+                            <th class="py-3 px-4">Nombre Completo</th>
+                            <th class="py-3 px-4">N° de Ficha / Cédula</th>
+                            <th class="py-3 px-4">Categoría</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-arbitros-body" class="divide-y divide-gray-200 text-sm">
+                        <tr><td colspan="3" class="py-6 text-center text-gray-400">Cargando árbitros...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL DE INICIO DE SESIÓN ADMIN -->
+    <div id="modal-login" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-base font-bold text-gray-900">Acceso de Administrador</h3>
+                <button onclick="toggleLoginModal()" class="text-gray-400 hover:text-gray-600 text-lg font-bold">&times;</button>
+            </div>
+            <p class="text-xs text-gray-500">Introduce las credenciales autorizadas para modificar los registros de velocidad.</p>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Correo Electrónico</label>
+                    <input type="email" id="login-email" placeholder="admin@arbitros.com" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Contraseña</label>
+                    <input type="password" id="login-password" placeholder="••••••••" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="toggleLoginModal()" class="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-lg">Cancelar</button>
+                <button onclick="ejecutarLogin()" class="px-4 py-2 text-xs font-semibold bg-blue-900 hover:bg-blue-800 text-white rounded-lg shadow">Iniciar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NUEVA SEMANA -->
+    <div id="modal-semana" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl space-y-4">
+            <h3 class="text-base font-bold text-gray-900">Crear Nuevo Ciclo Semanal</h3>
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Nombre de la Semana / Ciclo</label>
+                <input type="text" id="input-nombre-semana" placeholder="Ej: Semana 1 - Octubre" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="cerrarModalSemana()" class="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-lg">Cancelar</button>
+                <button onclick="crearSemana()" class="px-4 py-2 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NUEVA PRUEBA -->
+    <div id="modal-prueba" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl space-y-4">
+            <h3 class="text-base font-bold text-gray-900">Añadir Prueba de Velocidad</h3>
+            <div>
+                <label class="block text-xs font-semibold text-gray-700 mb-1">Nombre de la Prueba</label>
+                <input type="text" id="input-nombre-prueba" placeholder="Ej: Sprint 40m (Lunes)" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="cerrarModalPrueba()" class="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-lg">Cancelar</button>
+                <button onclick="crearPrueba()" class="px-4 py-2 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">Añadir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NUEVO ÁRBITRO -->
+    <div id="modal-arbitro" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl space-y-4">
+            <h3 class="text-base font-bold text-gray-900">Registrar Nuevo Árbitro</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Nombre y Apellido</label>
+                    <input type="text" id="input-nombre-arbitro" placeholder="Ej: Carlos Pérez" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">N° de Ficha o Cédula</label>
+                    <input type="text" id="input-ficha-arbitro" placeholder="Ej: V-15234567" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Categoría</label>
+                    <input type="text" id="input-categoria-arbitro" placeholder="Ej: Primera / Regional" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="cerrarModalArbitro()" class="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-lg">Cancelar</button>
+                <button onclick="guardarArbitro()" class="px-4 py-2 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">Registrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-12 py-4 text-center text-xs text-gray-500">
+        Asociación de Árbitros del Estado Sucre &copy; 2026 - Sistema de Gestión de Rendimiento Físico
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, addDoc, doc, setDoc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // CONFIGURACIÓN DE FIREBASE (Reemplaza con tus credenciales reales)
+        const firebaseConfig = {
+            apiKey: "TU_API_KEY",
+            authDomain: "entrenamientos-semanales.firebaseapp.com",
+            projectId: "entrenamientos-semanales",
+            storageBucket: "entrenamientos-semanales.appspot.com",
+            messagingSenderId: "TU_MESSAGING_SENDER_ID",
+            appId: "TU_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let arbitrosGlobal = [];
+        let pruebasGlobal = [];
+        let resultadosGlobal = {};
+
+        // Control de Autenticación en Interfaz
+        onAuthStateChanged(auth, (user) => {
+            const statusEl = document.getElementById('admin-status');
+            const btnLogin = document.getElementById('btn-open-login');
+            const adminActions = document.querySelectorAll('.admin-action');
+
+            if (user) {
+                statusEl.textContent = "Admin Conectado";
+                statusEl.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800";
+                btnLogin.textContent = "Cerrar Sesión";
+                btnLogin.onclick = () => signOut(auth);
+                adminActions.forEach(el => el.classList.remove('hidden'));
+            } else {
+                statusEl.textContent = "Modo Lectura";
+                statusEl.className = "text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-200 text-gray-700";
+                btnLogin.textContent = "Acceso Admin";
+                btnLogin.onclick = toggleLoginModal;
+                adminActions.forEach(el => el.classList.add('hidden'));
+            }
+        });
+
+        window.ejecutarLogin = async () => {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                toggleLoginModal();
+                alert("¡Sesión iniciada correctamente, mi lord!");
+            } catch (error) {
+                alert("Error de autenticación: Verifica tus credenciales.");
+            }
+        };
+
+        // Funciones de navegación de pestañas
+        window.switchTab = (tab) => {
+            ['semanal', 'general', 'arbitros'].forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).className = "px-4 py-2 text-sm font-semibold rounded-lg text-gray-600 hover:bg-gray-200 transition";
+            });
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).className = "px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white shadow-sm transition";
+            if(tab === 'arbitros') cargarArbitros();
+            if(tab === 'general') calcularRankingGeneral();
+        };
+
+        // Modales
+        window.toggleLoginModal = () => {
+            const m = document.getElementById('modal-login');
+            m.classList.toggle('hidden');
+            m.classList.toggle('flex');
+        };
+        window.abrirModalSemana = () => { document.getElementById('modal-semana').classList.remove('hidden'); document.getElementById('modal-semana').classList.add('flex'); }
+        window.cerrarModalSemana = () => { document.getElementById('modal-semana').classList.add('hidden'); document.getElementById('modal-semana').classList.remove('flex'); }
+        window.abrirModalPrueba = () => { document.g                   <tr><td colspan="3" class="text-center py-8 text-gray-400">Cargando nómina de árbitros...</td></tr>
                         </tbody>
                     </table>
                 </div>
