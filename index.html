@@ -49,7 +49,7 @@
       <div class="flex flex-wrap justify-between items-center gap-4">
         <div class="flex items-center space-x-3">
           <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-sucre-800 font-black text-xl shadow-md border-2 border-amber-400">
-            <i class="fa-solid fa-[#f59e0b] fa-shield-halved text-amber-500 text-2xl"></i>
+            <i class="fa-solid fa-shield-halved text-amber-500 text-2xl"></i>
           </div>
           <div>
             <h1 class="font-extrabold text-xl sm:text-2xl tracking-tight leading-none text-white">
@@ -110,33 +110,47 @@
 
     <!-- TABS NAVIGATION -->
     <div class="flex border-b border-slate-200 mb-6 space-x-2 overflow-x-auto pb-1">
-      <button id="tab-btn-ranking" onclick="switchTab('ranking')" class="tab-active py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2">
+      <button id="tab-btn-ranking" onclick="switchTab('ranking')" class="tab-active py-2.5 px-5 font-bold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 border-sucre-600 text-sucre-700 bg-sucre-50/50">
         <i class="fa-solid fa-trophy text-amber-500"></i>
-        <span>Ranking General</span>
+        <span>Ranking Semanal</span>
       </button>
-      <button id="tab-btn-weeks" onclick="switchTab('weeks')" class="tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2">
+      <button id="tab-btn-weeks" onclick="switchTab('weeks')" class="tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 text-slate-500 border-transparent hover:text-sucre-600">
         <i class="fa-solid fa-stopwatch text-sucre-600"></i>
         <span>Pruebas por Semana</span>
       </button>
-      <button id="tab-btn-referees" onclick="switchTab('referees')" class="tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2">
+      <button id="tab-btn-referees" onclick="switchTab('referees')" class="tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 text-slate-500 border-transparent hover:text-sucre-600">
         <i class="fa-solid fa-users text-slate-600"></i>
         <span>Nómina de Árbitros</span>
       </button>
     </div>
 
-    <!-- TAB 1: RANKING GENERAL -->
+    <!-- TAB 1: RANKING SEMANAL -->
     <section id="tab-content-ranking" class="tab-content">
       <div class="bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden">
-        <div class="p-5 bg-slate-50 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div class="p-5 bg-slate-50 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i class="fa-solid fa-medal text-amber-500"></i>
-              Tabla Posicional Acumulada
+              Tabla Posicional Semanal
             </h2>
-            <p class="text-xs text-slate-500">Puntuación basada en los tiempos registrados en cada prueba</p>
+            <p class="text-xs text-slate-500">Promedio de las notas individuales (Base 10) por prueba de la semana</p>
           </div>
-          <div class="text-xs bg-blue-50 text-sucre-800 font-semibold px-3 py-1.5 rounded-full border border-blue-100">
-            Fórmula: Puntos = 10 × (Mejor Tiempo / Tiempo Árbitro)
+
+          <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+            <!-- Selección de Semana -->
+            <div class="flex items-center gap-2 w-full md:w-auto">
+              <label class="text-xs font-bold text-slate-600 whitespace-nowrap">Semana:</label>
+              <select id="ranking-week-select" onchange="handleRankingWeekChange(this.value)" class="w-full md:w-48 px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-sucre-500 outline-none">
+                <option value="">Cargando semanas...</option>
+              </select>
+            </div>
+
+            <!-- Filtro de Categoría -->
+            <div class="flex items-center bg-slate-200 p-1 rounded-lg text-xs font-bold">
+              <button onclick="setCategoryFilter('ALL')" id="filter-btn-ALL" class="px-3 py-1 rounded-md transition bg-white text-sucre-700 shadow-sm">Todos</button>
+              <button onclick="setCategoryFilter('Sala')" id="filter-btn-Sala" class="px-3 py-1 rounded-md transition text-slate-600 hover:text-sucre-700">Sala</button>
+              <button onclick="setCategoryFilter('Campo')" id="filter-btn-Campo" class="px-3 py-1 rounded-md transition text-slate-600 hover:text-sucre-700">Campo</button>
+            </div>
           </div>
         </div>
 
@@ -147,8 +161,8 @@
                 <th class="py-3.5 px-4 text-center w-16">Pos</th>
                 <th class="py-3.5 px-4">Árbitro / Atleta</th>
                 <th class="py-3.5 px-4 text-center">Categoría</th>
-                <th class="py-3.5 px-4 text-center">Pruebas Realizadas</th>
-                <th class="py-3.5 px-4 text-right pr-6">Puntaje Total</th>
+                <th class="py-3.5 px-4 text-center">Pruebas Evaluadas</th>
+                <th class="py-3.5 px-4 text-right pr-6">Nota Semanal (Base 10)</th>
               </tr>
             </thead>
             <tbody id="ranking-table-body" class="divide-y divide-slate-100">
@@ -270,7 +284,7 @@
   </div>
 
 
-  <!-- MODAL: ADD REFEREE -->
+  <!-- MODAL: ADD REFEREE (REDUCIDO A SALA Y CAMPO) -->
   <div id="modal-add-referee" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
       <div class="bg-sucre-700 p-4 text-white flex justify-between items-center">
@@ -289,11 +303,8 @@
         <div>
           <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Categoría</label>
           <select id="ref-category" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
-            <option value="Principal Primera">Principal Primera</option>
-            <option value="Asistente Primera">Asistente Primera</option>
-            <option value="Nacional">Nacional</option>
-            <option value="Estadal">Estadal</option>
-            <option value="Aspirante">Aspirante</option>
+            <option value="Sala">Sala</option>
+            <option value="Campo">Campo</option>
           </select>
         </div>
         <div>
@@ -386,7 +397,7 @@
 
       <div class="p-6 overflow-y-auto flex-grow space-y-4">
         <div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded text-xs text-amber-800">
-          <strong>Importante:</strong> Ingresa el tiempo numérico para cada árbitro. El sistema asignará automáticamente la mejor marca y calculará la puntuación inversa correspondiente.
+          <strong>Importante:</strong> Ingresa el tiempo numérico para cada árbitro. El sistema asignará automáticamente la mejor marca y calculará la puntuación en base a 10.
         </div>
 
         <input type="hidden" id="marks-week-id">
@@ -436,12 +447,13 @@
       isAdmin: false,
       referees: [],
       weeks: [],
-      selectedWeekId: null
+      selectedWeekId: null,
+      rankingWeekId: null,
+      categoryFilter: 'ALL'
     };
 
     // Make DB and Auth actions globally available
-    // Make DB and Auth actions globally available
-window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEmailAndPassword, signOut };
+    window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEmailAndPassword, signOut };
 
     // --- AUTH LISTENERS ---
     onAuthStateChanged(auth, (user) => {
@@ -500,12 +512,20 @@ window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEm
       window.state.weeks.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
       renderWeeksList();
-      calculateAndRenderRanking();
+      populateRankingWeekSelect();
 
       if (!window.state.selectedWeekId && window.state.weeks.length > 0) {
         window.state.selectedWeekId = window.state.weeks[0].id;
       }
       
+      if (!window.state.rankingWeekId && window.state.weeks.length > 0) {
+        window.state.rankingWeekId = window.state.weeks[0].id;
+        const sel = document.getElementById('ranking-week-select');
+        if(sel) sel.value = window.state.rankingWeekId;
+      }
+
+      calculateAndRenderRanking();
+
       if (window.state.selectedWeekId) {
         renderWeekDetail(window.state.selectedWeekId);
       }
@@ -646,7 +666,7 @@ window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEm
 
       const newTest = {
         id: 'test_' + Date.now(),
-        name, unit, marks: {} // { refereeId: markValue }
+        name, unit, marks: {}
       };
 
       const updatedTests = [...(week.tests || []), newTest];
@@ -660,6 +680,25 @@ window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEm
         document.getElementById('form-add-test').reset();
       } catch (err) {
         showToast('Error al agregar prueba: ' + err.message, 'error');
+      }
+    }
+
+    // --- BORRAR PRUEBAS ---
+    async function deleteTest(weekId, testId) {
+      if(!confirm("¿Estás seguro de que deseas eliminar esta prueba de la semana?")) return;
+
+      const week = window.state.weeks.find(w => w.id === weekId);
+      if(!week) return;
+
+      const updatedTests = (week.tests || []).filter(t => t.id !== testId);
+
+      try {
+        await window.fb.updateDoc(window.fb.doc(window.fb.db, "weeks", weekId), {
+          tests: updatedTests
+        });
+        showToast('Prueba eliminada con éxito', 'success');
+      } catch (err) {
+        showToast('Error al eliminar prueba: ' + err.message, 'error');
       }
     }
 
@@ -736,6 +775,41 @@ window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEm
       } catch (err) {
         showToast('Error al guardar marcas: ' + err.message, 'error');
       }
+    }
+
+    // --- CONTROLES DE SEMANA Y FILTROS DEL RANKING ---
+    function populateRankingWeekSelect() {
+      const select = document.getElementById('ranking-week-select');
+      if(!select) return;
+
+      if(window.state.weeks.length === 0) {
+        select.innerHTML = `<option value="">Sin semanas</option>`;
+        return;
+      }
+
+      select.innerHTML = window.state.weeks.map(w => `
+        <option value="${w.id}" ${w.id === window.state.rankingWeekId ? 'selected' : ''}>${w.title}</option>
+      `).join('');
+    }
+
+    function handleRankingWeekChange(weekId) {
+      window.state.rankingWeekId = weekId;
+      calculateAndRenderRanking();
+    }
+
+    function setCategoryFilter(category) {
+      window.state.categoryFilter = category;
+      ['ALL', 'Sala', 'Campo'].forEach(c => {
+        const btn = document.getElementById(`filter-btn-${c}`);
+        if(btn) {
+          if(c === category) {
+            btn.className = 'px-3 py-1 rounded-md transition bg-white text-sucre-700 shadow-sm font-bold';
+          } else {
+            btn.className = 'px-3 py-1 rounded-md transition text-slate-600 hover:text-sucre-700 font-semibold';
+          }
+        }
+      });
+      calculateAndRenderRanking();
     }
 
     // --- RENDERING FUNCTIONS ---
@@ -839,16 +913,20 @@ window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEm
           const marks = test.marks || {};
           const recordedRefIds = Object.keys(marks);
 
-          // Find best mark (minimum time)
           let bestTime = null;
           if(recordedRefIds.length > 0) {
             bestTime = Math.min(...Object.values(marks));
           }
 
-          let adminRecordBtn = window.state.isAdmin ? `
-            <button onclick="openRecordMarksModal('${week.id}', '${test.id}')" class="text-xs bg-amber-50 text-amber-700 hover:bg-amber-100 font-bold px-3 py-1.5 rounded-lg border border-amber-200 transition flex items-center gap-1">
-              <i class="fa-solid fa-pen-to-square"></i> Cargar/Editar Marcas
-            </button>
+          let adminActionBtns = window.state.isAdmin ? `
+            <div class="flex items-center gap-2">
+              <button onclick="openRecordMarksModal('${week.id}', '${test.id}')" class="text-xs bg-amber-50 text-amber-700 hover:bg-amber-100 font-bold px-3 py-1.5 rounded-lg border border-amber-200 transition flex items-center gap-1">
+                <i class="fa-solid fa-pen-to-square"></i> Cargar/Editar Marcas
+              </button>
+              <button onclick="deleteTest('${week.id}', '${test.id}')" class="text-xs bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold px-2.5 py-1.5 rounded-lg border border-rose-200 transition flex items-center gap-1" title="Eliminar Prueba">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
           ` : '';
 
           contentHtml += `
@@ -863,7 +941,7 @@ window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEm
                     <span class="text-[10px] text-slate-500 uppercase font-semibold">Unidad: ${test.unit}</span>
                   </div>
                 </div>
-                ${adminRecordBtn}
+                ${adminActionBtns}
               </div>
 
               ${bestTime !== null ? `
@@ -879,7 +957,7 @@ window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEm
                     <tr class="bg-slate-100 text-slate-600 font-semibold border-b border-slate-200">
                       <th class="py-2 px-3">Árbitro</th>
                       <th class="py-2 px-3 text-center">Tiempo Registrado</th>
-                      <th class="py-2 px-3 text-right">Puntos Calculados</th>
+                      <th class="py-2 px-3 text-right">Puntos (Base 10)</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-100">
@@ -891,7 +969,7 @@ window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEm
             window.state.referees.forEach(ref => {
               if(marks[ref.id] !== undefined) {
                 const time = marks[ref.id];
-                // Formula: 10 * (best_time / ref_time)
+                // Formula Base 10: 10 * (bestTime / refTime)
                 const points = (10 * (bestTime / time)).toFixed(2);
 
                 contentHtml += `
@@ -924,7 +1002,7 @@ window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEm
       openModal('modal-add-test');
     }
 
-    // --- CALCULATE GLOBAL RANKING ---
+    // --- CÁLCULO DEL RANKING SEMANAL ---
     function calculateAndRenderRanking() {
       const tbody = document.getElementById('ranking-table-body');
       if(!tbody) return;
@@ -934,39 +1012,58 @@ window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEm
         return;
       }
 
-      // Initialize map of total points per referee
+      const week = window.state.weeks.find(w => w.id === window.state.rankingWeekId);
+      if(!week) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">Selecciona una semana activa para consultar la clasificación.</td></tr>`;
+        return;
+      }
+
+      // Filtrar árbitros por categoría (Todos, Sala o Campo)
+      let filteredReferees = window.state.referees;
+      if(window.state.categoryFilter !== 'ALL') {
+        filteredReferees = filteredReferees.filter(r => r.category === window.state.categoryFilter);
+      }
+
+      if(filteredReferees.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No hay árbitros registrados en la categoría ${window.state.categoryFilter}.</td></tr>`;
+        return;
+      }
+
+      const tests = week.tests || [];
+      const totalTestsCount = tests.length;
+
+      // Inicializar scores de los árbitros filtrados
       const refereeScores = {};
-      window.state.referees.forEach(ref => {
+      filteredReferees.forEach(ref => {
         refereeScores[ref.id] = {
           referee: ref,
-          totalPoints: 0,
-          testsCount: 0
+          sumPointsBase10: 0,
+          evaluatedTestsCount: 0
         };
       });
 
-      // Iterate all weeks and tests to calculate total points
-      window.state.weeks.forEach(week => {
-        (week.tests || []).forEach(test => {
-          const marks = test.marks || {};
-          const times = Object.values(marks);
-          if(times.length > 0) {
-            const bestTime = Math.min(...times);
-            Object.keys(marks).forEach(refId => {
-              if(refereeScores[refId]) {
-                const refTime = marks[refId];
-                if(refTime > 0) {
-                  const points = 10 * (bestTime / refTime);
-                  refereeScores[refId].totalPoints += points;
-                  refereeScores[refId].testsCount += 1;
-                }
-              }
-            });
-          }
-        });
+      // Calcular puntos base 10 por cada prueba de la semana seleccionada
+      tests.forEach(test => {
+        const marks = test.marks || {};
+        const times = Object.values(marks);
+        if(times.length > 0) {
+          const bestTime = Math.min(...times);
+          filteredReferees.forEach(ref => {
+            const refTime = marks[ref.id];
+            if(refTime !== undefined && refTime > 0) {
+              const pointsBase10 = 10 * (bestTime / refTime);
+              refereeScores[ref.id].sumPointsBase10 += pointsBase10;
+              refereeScores[ref.id].evaluatedTestsCount += 1;
+            }
+          });
+        }
       });
 
-      // Convert to array and sort by score descending
-      const sortedRanking = Object.values(refereeScores).sort((a, b) => b.totalPoints - a.totalPoints);
+      // Calcular promedio semanal (Suma de notas base 10 / Total de pruebas de la semana)
+      const sortedRanking = Object.values(refereeScores).map(item => {
+        const weeklyAverage = totalTestsCount > 0 ? (item.sumPointsBase10 / totalTestsCount) : 0;
+        return { ...item, weeklyAverage };
+      }).sort((a, b) => b.weeklyAverage - a.weeklyAverage);
 
       tbody.innerHTML = sortedRanking.map((item, index) => {
         const rank = index + 1;
@@ -985,10 +1082,10 @@ window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, signInWithEm
             <td class="py-3.5 px-4 text-center">
               <span class="bg-blue-50 text-sucre-800 text-xs px-2.5 py-1 rounded-full font-medium border border-blue-100">${item.referee.category}</span>
             </td>
-            <td class="py-3.5 px-4 text-center font-medium text-slate-600">${item.testsCount} pruebas</td>
+            <td class="py-3.5 px-4 text-center font-medium text-slate-600">${item.evaluatedTestsCount} / ${totalTestsCount} pruebas</td>
             <td class="py-3.5 px-4 text-right pr-6">
-              <span class="font-black text-sucre-700 text-base">${item.totalPoints.toFixed(2)}</span>
-              <span class="text-xs text-slate-400 font-semibold"> pts</span>
+              <span class="font-black text-sucre-700 text-base">${item.weeklyAverage.toFixed(2)}</span>
+              <span class="text-xs text-slate-400 font-semibold"> / 10 pts</span>
             </td>
           </tr>
         `;
