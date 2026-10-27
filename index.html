@@ -57,9 +57,9 @@
         <!-- 🖼️ ZONA DEL LOGO INSTITUCIONAL (CAMBIAR AQUÍ LA IMAGEN O ÍCONO) -->
         <!-- ========================================================================== -->
         <div class="flex items-center space-x-3">
-          <div class="w-26 h-26 sm:w-20 sm:h-20 bg-white rounded-full flex items-center justify-center text-sucre-800 font-black text-xl shadow-md border-2 border-blue-400 overflow-hidden flex-shrink-0">
-  <img src="https://lh3.googleusercontent.com/d/1bmQL4rMiLTGrNW8TfqQpI_6eN3QhMt2g" alt="Logo Sucre" class="w-full h-full object-cover">
-</div>
+          <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-xl flex items-center justify-center text-sucre-800 font-black text-xl shadow-md overflow-hidden flex-shrink-0">
+            <img src="https://lh3.googleusercontent.com/d/1bmQL4rMiLTGrNW8TfqQpI_6eN3QhMt2g" alt="Logo Sucre" class="w-full h-full object-cover">
+          </div>
           
           <div>
             <h1 class="font-extrabold text-xl sm:text-2xl tracking-tight leading-none text-white">
@@ -103,7 +103,7 @@
           <i class="fa-solid fa-user-gear text-amber-600 text-2xl"></i>
           <div>
             <h3 class="font-bold text-amber-900">Modo Administrador Activo</h3>
-            <p class="text-xs text-amber-700">Tienes permisos para gestionar semanas, añadir árbitros, eliminar registros y cargar resultados.</p>
+            <p class="text-xs text-amber-700">Tienes permisos para gestionar semanas, editar semanas, añadir árbitros y cargar resultados.</p>
           </div>
         </div>
         <div class="flex flex-wrap gap-2">
@@ -296,7 +296,7 @@
   </div>
 
 
-  <!-- MODAL: ADD REFEREE (CON CAMPO DE FOTO Y CATEGORÍAS SALA/CAMPO) -->
+  <!-- MODAL: ADD REFEREE -->
   <div id="modal-add-referee" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
       <div class="bg-sucre-700 p-4 text-white flex justify-between items-center">
@@ -359,6 +359,36 @@
         <div class="pt-2 flex justify-end gap-2">
           <button type="button" onclick="closeModal('modal-add-week')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg">Cancelar</button>
           <button type="submit" class="px-4 py-2 bg-sucre-700 hover:bg-sucre-800 text-white text-xs font-bold rounded-lg shadow">Crear Semana</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- MODAL: EDIT WEEK -->
+  <div id="modal-edit-week" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
+      <div class="bg-sucre-700 p-4 text-white flex justify-between items-center">
+        <h3 class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square"></i> Editar Semana Evaluativa
+        </h3>
+        <button onclick="closeModal('modal-edit-week')" class="text-blue-200 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="form-edit-week" onsubmit="handleEditWeek(event)" class="p-6 space-y-4">
+        <input type="hidden" id="edit-week-id">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Título de la Semana</label>
+          <input type="text" id="edit-week-title" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Fecha de Inicio</label>
+          <input type="date" id="edit-week-date" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-edit-week')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg">Cancelar</button>
+          <button type="submit" class="px-4 py-2 bg-sucre-700 hover:bg-sucre-800 text-white text-xs font-bold rounded-lg shadow">Guardar Cambios</button>
         </div>
       </form>
     </div>
@@ -468,7 +498,7 @@
       categoryFilter: 'ALL'
     };
 
-    // Make DB and Auth actions globally available (incluyendo deleteDoc)
+    // Make DB and Auth actions globally available
     window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, deleteDoc, signInWithEmailAndPassword, signOut };
 
     // --- AUTH LISTENERS ---
@@ -634,7 +664,7 @@
       }
     }
 
-    // --- DATA CREATION & DELETION HANDLERS ---
+    // --- DATA CREATION, EDIT & DELETION HANDLERS ---
     async function handleAddReferee(e) {
       e.preventDefault();
       const name = document.getElementById('ref-name').value;
@@ -680,6 +710,51 @@
         showToast('Error al añadir semana: ' + err.message, 'error');
       }
     }
+
+    // --- FUNCIONES NUEVAS: EDITAR Y ELIMINAR SEMANAS ---
+    function openEditWeekModal(weekId) {
+      const week = window.state.weeks.find(w => w.id === weekId);
+      if(!week) return;
+
+      document.getElementById('edit-week-id').value = week.id;
+      document.getElementById('edit-week-title').value = week.title || '';
+      document.getElementById('edit-week-date').value = week.date || '';
+
+      openModal('modal-edit-week');
+    }
+
+    async function handleEditWeek(e) {
+      e.preventDefault();
+      const weekId = document.getElementById('edit-week-id').value;
+      const title = document.getElementById('edit-week-title').value;
+      const date = document.getElementById('edit-week-date').value;
+
+      try {
+        await window.fb.updateDoc(window.fb.doc(window.fb.db, "weeks", weekId), {
+          title, date
+        });
+        showToast('Semana actualizada con éxito', 'success');
+        closeModal('modal-edit-week');
+      } catch (err) {
+        showToast('Error al actualizar semana: ' + err.message, 'error');
+      }
+    }
+
+    async function deleteWeek(weekId) {
+      if(!confirm("¿Estás seguro de eliminar esta semana evaluativa por completo? Se borrarán todas sus pruebas y marcas asociadas.")) return;
+
+      try {
+        await window.fb.deleteDoc(window.fb.doc(window.fb.db, "weeks", weekId));
+        showToast('Semana eliminada correctamente', 'success');
+        // Si la semana borrada era la seleccionada, resetear selección
+        if(window.state.selectedWeekId === weekId) {
+          window.state.selectedWeekId = window.state.weeks.length > 1 ? window.state.weeks.find(w => w.id !== weekId).id : null;
+        }
+      } catch (err) {
+        showToast('Error al eliminar semana: ' + err.message, 'error');
+      }
+    }
+    // --------------------------------------------------
 
     async function handleAddTest(e) {
       e.preventDefault();
@@ -926,19 +1001,27 @@
 
       const tests = week.tests || [];
 
-      let adminTestBtn = window.state.isAdmin ? `
-        <button onclick="openModalAddTest('${week.id}')" class="bg-sucre-700 hover:bg-sucre-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition flex items-center gap-1">
-          <i class="fa-solid fa-plus"></i> Nueva Prueba
-        </button>
+      let adminWeekActions = window.state.isAdmin ? `
+        <div class="flex items-center gap-2">
+          <button onclick="openEditWeekModal('${week.id}')" class="text-xs bg-amber-50 text-amber-700 hover:bg-amber-100 font-bold px-3 py-1.5 rounded-lg border border-amber-200 transition flex items-center gap-1" title="Editar Semana">
+            <i class="fa-solid fa-pen-to-square"></i> Editar
+          </button>
+          <button onclick="deleteWeek('${week.id}')" class="text-xs bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold px-2.5 py-1.5 rounded-lg border border-rose-200 transition flex items-center gap-1" title="Eliminar Semana">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+          <button onclick="openModalAddTest('${week.id}')" class="bg-sucre-700 hover:bg-sucre-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg shadow transition flex items-center gap-1 ml-2">
+            <i class="fa-solid fa-plus"></i> Nueva Prueba
+          </button>
+        </div>
       ` : '';
 
       let contentHtml = `
-        <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
+        <div class="flex flex-wrap justify-between items-center border-b border-slate-100 pb-4 mb-6 gap-3">
           <div>
             <h2 class="text-lg font-bold text-slate-800">${week.title}</h2>
             <p class="text-xs text-slate-500">Fecha inicio: ${week.date}</p>
           </div>
-          ${adminTestBtn}
+          ${adminWeekActions}
         </div>
       `;
 
@@ -1044,7 +1127,7 @@
       openModal('modal-add-test');
     }
 
-    // --- CÁLCULO DEL RANKING SEMANAL CON FOTO EN VEZ DE NÚMERO ---
+    // --- CÁLCULO DEL RANKING SEMANAL ---
     function calculateAndRenderRanking() {
       const tbody = document.getElementById('ranking-table-body');
       if(!tbody) return;
@@ -1110,7 +1193,6 @@
         if(rank === 2) badge = `<span class="w-7 h-7 bg-slate-300 text-slate-800 rounded-full inline-flex items-center justify-center font-black text-xs shadow">2</span>`;
         if(rank === 3) badge = `<span class="w-7 h-7 bg-amber-700 text-white rounded-full inline-flex items-center justify-center font-black text-xs shadow">3</span>`;
 
-        // Reemplazar el número del ranking por la foto pequeña si existe
         let positionDisplay = badge;
         if(item.referee.photo && item.referee.photo.trim() !== '') {
           positionDisplay = `<img src="${item.referee.photo}" alt="${item.referee.name}" class="w-9 h-9 rounded-full object-cover mx-auto border-2 border-amber-400 shadow-sm" title="Posición #${rank}">`;
