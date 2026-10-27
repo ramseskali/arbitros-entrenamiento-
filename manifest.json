@@ -1,0 +1,15 @@
+{
+  "name": "Árbitros de Sucre - Ranking",
+  "short_name": "Árbitros Sucre",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0c4a6e",
+  "theme_color": "#0c4a6e",
+  "icons": [
+    {
+      "src": "https://lh3.googleusercontent.com/d/1bmQL4rMiLTGrNW8TfqQpI_6eN3QhMt2g",
+      "sizes": "192x192 512x512",
+      "type": "image/png"
+    }
+  ]
+}
