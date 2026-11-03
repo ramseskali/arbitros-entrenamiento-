@@ -13,9 +13,6 @@
   <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1bmQL4rMiLTGrNW8TfqQpI_6eN3QhMt2g">
   <link rel="manifest" href="manifest.json">
   
-  <!-- ========================================================================== -->
-  <!-- 🎨 ZONA DE CONFIGURACIÓN DE COLORES Y ESTILOS CSS (MODIFICAR AQUÍ) -->
-  <!-- ========================================================================== -->
   <script>
     tailwind.config = {
       theme: {
@@ -24,7 +21,6 @@
             sans: ['Inter', 'sans-serif'],
           },
           colors: {
-            // Cambia estos códigos hexadecimales si deseas ajustar la paleta de colores principal
             sucre: {
               50: '#f0f7ff',
               100: '#e0effe',
@@ -43,7 +39,6 @@
     body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
     .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
   </style>
-  <!-- ========================================================================== -->
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
@@ -55,9 +50,6 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
       <div class="flex flex-wrap justify-between items-center gap-4">
         
-        <!-- ========================================================================== -->
-        <!-- 🖼️ ZONA DEL LOGO INSTITUCIONAL (CAMBIAR AQUÍ LA IMAGEN O ÍCONO) -->
-        <!-- ========================================================================== -->
         <div class="flex items-center space-x-3">
           <div class="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-xl flex items-center justify-center text-sucre-800 font-black text-xl shadow-md overflow-hidden flex-shrink-0">
             <img src="https://lh3.googleusercontent.com/d/1bmQL4rMiLTGrNW8TfqQpI_6eN3QhMt2g" alt="Logo Sucre" class="w-full h-full object-cover">
@@ -72,7 +64,6 @@
             </p>
           </div>
         </div>
-        <!-- ========================================================================== -->
 
         <!-- AUTH BUTTONS -->
         <div class="flex items-center space-x-3">
@@ -98,14 +89,14 @@
   <!-- MAIN CONTAINER -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
 
-    <!-- ADMIN CONTROLS BANNER (VISIBLE ONLY TO ADMIN) -->
+    <!-- ADMIN CONTROLS BANNER -->
     <div id="admin-banner" class="hidden mb-8 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center gap-3">
           <i class="fa-solid fa-user-gear text-amber-600 text-2xl"></i>
           <div>
             <h3 class="font-bold text-amber-900">Modo Administrador Activo</h3>
-            <p class="text-xs text-amber-700">Tienes permisos para gestionar semanas, editar semanas, añadir árbitros y cargar resultados.</p>
+            <p class="text-xs text-amber-700">Tienes permisos para gestionar semanas, editar semanas, añadir y editar árbitros, y cargar resultados por repetición.</p>
           </div>
         </div>
         <div class="flex flex-wrap gap-2">
@@ -150,7 +141,6 @@
           </div>
 
           <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-            <!-- Selección de Semana -->
             <div class="flex items-center gap-2 w-full md:w-auto">
               <label class="text-xs font-bold text-slate-600 whitespace-nowrap">Semana:</label>
               <select id="ranking-week-select" onchange="handleRankingWeekChange(this.value)" class="w-full md:w-48 px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-sucre-500 outline-none">
@@ -158,7 +148,6 @@
               </select>
             </div>
 
-            <!-- Filtro de Categoría -->
             <div class="flex items-center bg-slate-200 p-1 rounded-lg text-xs font-bold">
               <button onclick="setCategoryFilter('ALL')" id="filter-btn-ALL" class="px-3 py-1 rounded-md transition bg-white text-sucre-700 shadow-sm">Todos</button>
               <button onclick="setCategoryFilter('Sala')" id="filter-btn-Sala" class="px-3 py-1 rounded-md transition text-slate-600 hover:text-sucre-700">Sala</button>
@@ -194,7 +183,6 @@
     <!-- TAB 2: PRUEBAS POR SEMANA -->
     <section id="tab-content-weeks" class="tab-content hidden">
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <!-- Sidebar: Selector de Semana -->
         <div class="lg:col-span-1 space-y-4">
           <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
             <div class="flex justify-between items-center mb-3">
@@ -209,7 +197,6 @@
           </div>
         </div>
 
-        <!-- Main View: Detalle de Semana y Pruebas -->
         <div class="lg:col-span-3 space-y-6">
           <div id="week-detail-container" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div class="text-center py-12 text-slate-400">
@@ -265,7 +252,6 @@
     </div>
   </footer>
 
-
   <!-- MODAL: ADMIN LOGIN -->
   <div id="modal-login" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
@@ -296,7 +282,6 @@
       </form>
     </div>
   </div>
-
 
   <!-- MODAL: ADD REFEREE -->
   <div id="modal-add-referee" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -337,6 +322,45 @@
     </div>
   </div>
 
+  <!-- MODAL: EDIT REFEREE -->
+  <div id="modal-edit-referee" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
+      <div class="bg-sucre-700 p-4 text-white flex justify-between items-center">
+        <h3 class="font-bold text-sm flex items-center gap-2">
+          <i class="fa-solid fa-user-pen"></i> Editar Árbitro
+        </h3>
+        <button onclick="closeModal('modal-edit-referee')" class="text-blue-200 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <form id="form-edit-referee" onsubmit="handleEditReferee(event)" class="p-6 space-y-4">
+        <input type="hidden" id="edit-ref-id">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre Completo</label>
+          <input type="text" id="edit-ref-name" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Categoría</label>
+          <select id="edit-ref-category" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+            <option value="Sala">Sala</option>
+            <option value="Campo">Campo</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Cédula / Identificación</label>
+          <input type="text" id="edit-ref-doc" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">URL de la Foto de Perfil</label>
+          <input type="url" id="edit-ref-photo" placeholder="https://ejemplo.com/foto.jpg" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-edit-referee')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg">Cancelar</button>
+          <button type="submit" class="px-4 py-2 bg-sucre-700 hover:bg-sucre-800 text-white text-xs font-bold rounded-lg shadow">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- MODAL: ADD WEEK -->
   <div id="modal-add-week" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -365,7 +389,6 @@
       </form>
     </div>
   </div>
-
 
   <!-- MODAL: EDIT WEEK -->
   <div id="modal-edit-week" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -396,8 +419,7 @@
     </div>
   </div>
 
-
-  <!-- MODAL: ADD TEST -->
+  <!-- MODAL: ADD TEST (SOPORTA CANTIDAD DE REPETICIONES) -->
   <div id="modal-add-test" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
       <div class="bg-sucre-700 p-4 text-white flex justify-between items-center">
@@ -412,15 +434,24 @@
         <input type="hidden" id="test-week-id">
         <div>
           <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nombre de la Prueba</label>
-          <input type="text" id="test-name" placeholder="Ej. 40 Metros Planos, Yo-Yo Test" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+          <input type="text" id="test-name" placeholder="Ej. 400m Repetidos, 40 Metros Planos" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
         </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Unidad de Medida</label>
-          <select id="test-unit" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
-            <option value="segundos">Segundos (s)</option>
-            <option value="minutos">Minutos (m)</option>
-          </select>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Unidad de Medida</label>
+            <select id="test-unit" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+              <option value="segundos">Segundos (s)</option>
+              <option value="minutos">Minutos (m)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nº Repeticiones</label>
+            <input type="number" id="test-reps" min="1" max="20" value="1" required class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
+          </div>
         </div>
+        <p class="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded border border-slate-200">
+          <i class="fa-solid fa-info-circle text-sucre-600"></i> Si es una prueba de repeticiones (ej. 400m x 5), coloca 5 repeticiones. El sistema calculará el mejor tiempo de cada repetición y promediará los resultados de todas.
+        </p>
         <div class="pt-2 flex justify-end gap-2">
           <button type="button" onclick="closeModal('modal-add-test')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg">Cancelar</button>
           <button type="submit" class="px-4 py-2 bg-sucre-700 hover:bg-sucre-800 text-white text-xs font-bold rounded-lg shadow">Agregar Prueba</button>
@@ -429,10 +460,9 @@
     </div>
   </div>
 
-
-  <!-- MODAL: RECORD MARKS -->
+  <!-- MODAL: RECORD MARKS (SOPORTA MULTI-TIEMPOS) -->
   <div id="modal-record-marks" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col">
+    <div class="bg-white rounded-2xl shadow-xl max-w-4xl w-full overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col">
       <div class="bg-sucre-800 p-4 text-white flex justify-between items-center flex-shrink-0">
         <div>
           <h3 id="record-marks-title" class="font-bold text-sm">Cargar Tiempos / Marcas</h3>
@@ -445,14 +475,14 @@
 
       <div class="p-6 overflow-y-auto flex-grow space-y-4">
         <div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded text-xs text-amber-800">
-          <strong>Importante:</strong> Ingresa el tiempo numérico para cada árbitro. El sistema asignará automáticamente la mejor marca y calculará la puntuación en base a 10.
+          <strong>Importante:</strong> Ingresa el tiempo de cada repetición para los árbitros. Deja en blanco si el árbitro no realizó o no completó esa repetición; el sistema colocará una <strong>X</strong> (0 pts) e igual se dividirá entre el total de repeticiones para evaluar su desempeño global.
         </div>
 
         <input type="hidden" id="marks-week-id">
         <input type="hidden" id="marks-test-id">
 
         <div id="marks-input-list" class="space-y-3">
-          <!-- Dynamically filled with input controls -->
+          <!-- Dynamically filled with multi-rep input controls -->
         </div>
       </div>
 
@@ -462,7 +492,6 @@
       </div>
     </div>
   </div>
-
 
   <!-- FIREBASE MODULE SCRIPT -->
   <script type="module">
@@ -666,7 +695,7 @@
       }
     }
 
-    // --- DATA CREATION, EDIT & DELETION HANDLERS ---
+    // --- REFEREE HANDLERS (ADD, EDIT, DELETE) ---
     async function handleAddReferee(e) {
       e.preventDefault();
       const name = document.getElementById('ref-name').value;
@@ -686,6 +715,38 @@
       }
     }
 
+    function openEditRefereeModal(refId) {
+      const ref = window.state.referees.find(r => r.id === refId);
+      if(!ref) return;
+
+      document.getElementById('edit-ref-id').value = ref.id;
+      document.getElementById('edit-ref-name').value = ref.name || '';
+      document.getElementById('edit-ref-category').value = ref.category || 'Sala';
+      document.getElementById('edit-ref-doc').value = ref.doc || '';
+      document.getElementById('edit-ref-photo').value = ref.photo || '';
+
+      openModal('modal-edit-referee');
+    }
+
+    async function handleEditReferee(e) {
+      e.preventDefault();
+      const refId = document.getElementById('edit-ref-id').value;
+      const name = document.getElementById('edit-ref-name').value;
+      const category = document.getElementById('edit-ref-category').value;
+      const doc = document.getElementById('edit-ref-doc').value;
+      const photo = document.getElementById('edit-ref-photo').value;
+
+      try {
+        await window.fb.updateDoc(window.fb.doc(window.fb.db, "referees", refId), {
+          name, category, doc, photo
+        });
+        showToast('Datos del árbitro actualizados con éxito', 'success');
+        closeModal('modal-edit-referee');
+      } catch (err) {
+        showToast('Error al actualizar árbitro: ' + err.message, 'error');
+      }
+    }
+
     async function deleteReferee(refId) {
       if(!confirm("¿Estás seguro de eliminar este árbitro de la nómina? Se perderán sus vínculos en pruebas.")) return;
       try {
@@ -696,6 +757,7 @@
       }
     }
 
+    // --- WEEKS HANDLERS ---
     async function handleAddWeek(e) {
       e.preventDefault();
       const title = document.getElementById('week-title').value;
@@ -713,7 +775,6 @@
       }
     }
 
-    // --- FUNCIONES NUEVAS: EDITAR Y ELIMINAR SEMANAS ---
     function openEditWeekModal(weekId) {
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
@@ -732,7 +793,7 @@
       const date = document.getElementById('edit-week-date').value;
 
       try {
-        await window.fb.updateDoc(window.fb.doc(window.fb.db, "weeks", weekId), {
+        await window.fb.updateDoc(window.fb.doc(window.fb.doc(window.fb.db, "weeks", weekId)), {
           title, date
         });
         showToast('Semana actualizada con éxito', 'success');
@@ -748,7 +809,6 @@
       try {
         await window.fb.deleteDoc(window.fb.doc(window.fb.db, "weeks", weekId));
         showToast('Semana eliminada correctamente', 'success');
-        // Si la semana borrada era la seleccionada, resetear selección
         if(window.state.selectedWeekId === weekId) {
           window.state.selectedWeekId = window.state.weeks.length > 1 ? window.state.weeks.find(w => w.id !== weekId).id : null;
         }
@@ -756,20 +816,24 @@
         showToast('Error al eliminar semana: ' + err.message, 'error');
       }
     }
-    // --------------------------------------------------
 
+    // --- TESTS HANDLERS ---
     async function handleAddTest(e) {
       e.preventDefault();
       const weekId = document.getElementById('test-week-id').value;
       const name = document.getElementById('test-name').value;
       const unit = document.getElementById('test-unit').value;
+      const reps = parseInt(document.getElementById('test-reps').value) || 1;
 
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
 
       const newTest = {
         id: 'test_' + Date.now(),
-        name, unit, marks: {}
+        name, 
+        unit, 
+        reps,
+        marks: {} // Estructura: { [refereeId]: [rep1, rep2, rep3, ...] }
       };
 
       const updatedTests = [...(week.tests || []), newTest];
@@ -804,17 +868,19 @@
       }
     }
 
-    // --- MARKS RECORDING & CALCULATION ---
+    // --- MARKS RECORDING & MULTI-REP CALCULATION ---
     function openRecordMarksModal(weekId, testId) {
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
       const test = (week.tests || []).find(t => t.id === testId);
       if(!test) return;
 
+      const totalReps = test.reps || 1;
+
       document.getElementById('marks-week-id').value = weekId;
       document.getElementById('marks-test-id').value = testId;
       document.getElementById('record-marks-title').textContent = `Tiempos: ${test.name}`;
-      document.getElementById('record-marks-subtitle').textContent = `${week.title} (${test.unit})`;
+      document.getElementById('record-marks-subtitle').textContent = `${week.title} (${test.unit}) - ${totalReps} repetición(es)`;
 
       const container = document.getElementById('marks-input-list');
       container.innerHTML = '';
@@ -823,17 +889,36 @@
         container.innerHTML = `<p class="text-xs text-slate-500 py-4 text-center">No existen árbitros registrados para asignar tiempos.</p>`;
       } else {
         window.state.referees.forEach(ref => {
-          const currentMark = (test.marks && test.marks[ref.id]) !== undefined ? test.marks[ref.id] : '';
+          let refMarks = test.marks && test.marks[ref.id];
+          
+          // Compatibilidad con datos anteriores que no eran arreglos
+          if (typeof refMarks === 'number') {
+            refMarks = [refMarks];
+          } else if (!Array.isArray(refMarks)) {
+            refMarks = [];
+          }
+
+          let repInputsHtml = '';
+          for(let r = 0; r < totalReps; r++) {
+            const val = (refMarks[r] !== undefined && refMarks[r] !== null) ? refMarks[r] : '';
+            repInputsHtml += `
+              <div class="flex items-center gap-1">
+                <span class="text-[10px] text-slate-400 font-bold">R${r+1}:</span>
+                <input type="number" step="0.01" min="0" placeholder="X" value="${val}" data-ref-id="${ref.id}" data-rep-index="${r}" class="mark-input w-20 px-2 py-1.5 border border-slate-300 rounded text-xs text-right focus:ring-2 focus:ring-sucre-500 outline-none">
+              </div>
+            `;
+          }
+
           const row = document.createElement('div');
-          row.className = 'flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200';
+          row.className = 'flex flex-wrap items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200 gap-3';
           row.innerHTML = `
-            <div>
+            <div class="min-w-[150px]">
               <p class="font-bold text-xs text-slate-800">${ref.name}</p>
               <p class="text-[10px] text-slate-500">${ref.category}</p>
             </div>
-            <div class="flex items-center gap-2">
-              <input type="number" step="0.01" min="0" placeholder="Tiempo" value="${currentMark}" data-ref-id="${ref.id}" class="mark-input w-28 px-3 py-1.5 border border-slate-300 rounded text-sm text-right focus:ring-2 focus:ring-sucre-500 outline-none">
-              <span class="text-xs text-slate-500">${test.unit === 'segundos' ? 's' : 'm'}</span>
+            <div class="flex flex-wrap items-center gap-2">
+              ${repInputsHtml}
+              <span class="text-xs text-slate-500 ml-1 font-semibold">${test.unit === 'segundos' ? 's' : 'm'}</span>
             </div>
           `;
           container.appendChild(row);
@@ -850,14 +935,26 @@
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
 
+      const test = (week.tests || []).find(t => t.id === testId);
+      if(!test) return;
+
+      const totalReps = test.reps || 1;
       const inputs = document.querySelectorAll('.mark-input');
       const marksObj = {};
 
       inputs.forEach(input => {
         const refId = input.getAttribute('data-ref-id');
+        const repIndex = parseInt(input.getAttribute('data-rep-index'));
         const val = parseFloat(input.value);
+
+        if(!marksObj[refId]) {
+          marksObj[refId] = new Array(totalReps).fill(null);
+        }
+
         if(!isNaN(val) && val > 0) {
-          marksObj[refId] = val;
+          marksObj[refId][repIndex] = val;
+        } else {
+          marksObj[refId][repIndex] = null; // Representa 'X'
         }
       });
 
@@ -928,9 +1025,14 @@
       tbody.innerHTML = window.state.referees.map(ref => {
         let adminActionTd = window.state.isAdmin ? `
           <td class="py-3 px-4 text-center">
-            <button onclick="deleteReferee('${ref.id}')" class="text-xs bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold px-2.5 py-1.5 rounded-lg border border-rose-200 transition" title="Eliminar Árbitro">
-              <i class="fa-solid fa-trash-can"></i>
-            </button>
+            <div class="flex justify-center items-center gap-1.5">
+              <button onclick="openEditRefereeModal('${ref.id}')" class="text-xs bg-amber-50 text-amber-700 hover:bg-amber-100 font-bold px-2.5 py-1.5 rounded-lg border border-amber-200 transition" title="Editar Árbitro">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button onclick="deleteReferee('${ref.id}')" class="text-xs bg-rose-50 text-rose-700 hover:bg-rose-100 font-bold px-2.5 py-1.5 rounded-lg border border-rose-200 transition" title="Eliminar Árbitro">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
           </td>
         ` : '';
 
@@ -1039,11 +1141,21 @@
         
         tests.forEach(test => {
           const marks = test.marks || {};
-          const recordedRefIds = Object.keys(marks);
+          const totalReps = test.reps || 1;
+          const registeredRefIds = Object.keys(marks);
 
-          let bestTime = null;
-          if(recordedRefIds.length > 0) {
-            bestTime = Math.min(...Object.values(marks));
+          // Calcular mejor tiempo por repetición
+          const bestPerRep = [];
+          for (let r = 0; r < totalReps; r++) {
+            let validTimesForRep = [];
+            registeredRefIds.forEach(refId => {
+              let refMarks = marks[refId];
+              if (typeof refMarks === 'number') refMarks = [refMarks];
+              if (Array.isArray(refMarks) && refMarks[r] !== undefined && refMarks[r] !== null && refMarks[r] > 0) {
+                validTimesForRep.push(refMarks[r]);
+              }
+            });
+            bestPerRep[r] = validTimesForRep.length > 0 ? Math.min(...validTimesForRep) : null;
           }
 
           let adminActionBtns = window.state.isAdmin ? `
@@ -1057,6 +1169,8 @@
             </div>
           ` : '';
 
+          let bestTimesSummary = bestPerRep.map((b, idx) => b !== null ? `R${idx+1}: <strong>${b}${test.unit === 'segundos' ? 's' : 'm'}</strong>` : `R${idx+1}: --`).join(' | ');
+
           contentHtml += `
             <div class="bg-slate-50 rounded-xl border border-slate-200 p-4">
               <div class="flex flex-wrap justify-between items-center gap-2 mb-3">
@@ -1066,16 +1180,16 @@
                   </span>
                   <div>
                     <h4 class="font-bold text-sm text-slate-800">${test.name}</h4>
-                    <span class="text-[10px] text-slate-500 uppercase font-semibold">Unidad: ${test.unit}</span>
+                    <span class="text-[10px] text-slate-500 uppercase font-semibold">Unidad: ${test.unit} | Repeticiones: ${totalReps}</span>
                   </div>
                 </div>
                 ${adminActionBtns}
               </div>
 
-              ${bestTime !== null ? `
+              ${registeredRefIds.length > 0 ? `
                 <div class="mb-3 text-xs bg-emerald-50 text-emerald-800 p-2 rounded-lg border border-emerald-100 flex items-center gap-2">
                   <i class="fa-solid fa-trophy text-amber-500"></i>
-                  <span><strong>Mejor Marca de la Prueba:</strong> ${bestTime} ${test.unit === 'segundos' ? 's' : 'm'}</span>
+                  <span><strong>Mejores Marcas por Repetición:</strong> ${bestTimesSummary}</span>
                 </div>
               ` : ''}
 
@@ -1084,26 +1198,46 @@
                   <thead>
                     <tr class="bg-slate-100 text-slate-600 font-semibold border-b border-slate-200">
                       <th class="py-2 px-3">Árbitro</th>
-                      <th class="py-2 px-3 text-center">Tiempo Registrado</th>
-                      <th class="py-2 px-3 text-right">Puntos (Base 10)</th>
+                      ${Array.from({length: totalReps}).map((_, i) => `<th class="py-2 px-2 text-center">Rep ${i+1}</th>`).join('')}
+                      <th class="py-2 px-3 text-right">Promedio Nota (Base 10)</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-slate-100">
           `;
 
-          if(recordedRefIds.length === 0) {
-            contentHtml += `<tr><td colspan="3" class="py-4 text-center text-slate-400">No se han registrado marcas para esta prueba.</td></tr>`;
+          if(registeredRefIds.length === 0) {
+            contentHtml += `<tr><td colspan="${2 + totalReps}" class="py-4 text-center text-slate-400">No se han registrado marcas para esta prueba.</td></tr>`;
           } else {
             window.state.referees.forEach(ref => {
               if(marks[ref.id] !== undefined) {
-                const time = marks[ref.id];
-                const points = (10 * (bestTime / time)).toFixed(2);
+                let refMarks = marks[ref.id];
+                if (typeof refMarks === 'number') refMarks = [refMarks];
+                if (!Array.isArray(refMarks)) refMarks = [];
+
+                let sumPoints = 0;
+                let repTds = '';
+
+                for (let r = 0; r < totalReps; r++) {
+                  const t = refMarks[r];
+                  const bestForRep = bestPerRep[r];
+
+                  if (t !== undefined && t !== null && t > 0 && bestForRep !== null) {
+                    const points = (10 * (bestForRep / t));
+                    sumPoints += points;
+                    repTds += `<td class="py-2 px-2 text-center font-mono font-bold text-slate-800">${t} ${test.unit === 'segundos' ? 's' : 'm'}</td>`;
+                  } else {
+                    // Si no tiene tiempo o no completó
+                    repTds += `<td class="py-2 px-2 text-center font-mono font-bold text-rose-600 bg-rose-50/50" title="No completada">X</td>`;
+                  }
+                }
+
+                const finalTestAvg = totalReps > 0 ? (sumPoints / totalReps) : 0;
 
                 contentHtml += `
                   <tr>
                     <td class="py-2 px-3 font-semibold text-slate-700">${ref.name}</td>
-                    <td class="py-2 px-3 text-center font-mono font-bold text-slate-800">${time} ${test.unit === 'segundos' ? 's' : 'm'}</td>
-                    <td class="py-2 px-3 text-right font-bold text-sucre-700">+${points} pts</td>
+                    ${repTds}
+                    <td class="py-2 px-3 text-right font-bold text-sucre-700">+${finalTestAvg.toFixed(2)} pts</td>
                   </tr>
                 `;
               }
@@ -1129,7 +1263,7 @@
       openModal('modal-add-test');
     }
 
-    // --- CÁLCULO DEL RANKING SEMANAL ---
+    // --- CÁLCULO DEL RANKING SEMANAL CON MULTI-REPETICIONES ---
     function calculateAndRenderRanking() {
       const tbody = document.getElementById('ranking-table-body');
       if(!tbody) return;
@@ -1169,15 +1303,51 @@
 
       tests.forEach(test => {
         const marks = test.marks || {};
-        const times = Object.values(marks);
-        if(times.length > 0) {
-          const bestTime = Math.min(...times);
+        const totalReps = test.reps || 1;
+        const registeredRefIds = Object.keys(marks);
+
+        if(registeredRefIds.length > 0) {
+          // Obtener la mejor marca global por repetición
+          const bestPerRep = [];
+          for (let r = 0; r < totalReps; r++) {
+            let validTimesForRep = [];
+            registeredRefIds.forEach(refId => {
+              let refMarks = marks[refId];
+              if (typeof refMarks === 'number') refMarks = [refMarks];
+              if (Array.isArray(refMarks) && refMarks[r] !== undefined && refMarks[r] !== null && refMarks[r] > 0) {
+                validTimesForRep.push(refMarks[r]);
+              }
+            });
+            bestPerRep[r] = validTimesForRep.length > 0 ? Math.min(...validTimesForRep) : null;
+          }
+
           filteredReferees.forEach(ref => {
-            const refTime = marks[ref.id];
-            if(refTime !== undefined && refTime > 0) {
-              const pointsBase10 = 10 * (bestTime / refTime);
-              refereeScores[ref.id].sumPointsBase10 += pointsBase10;
-              refereeScores[ref.id].evaluatedTestsCount += 1;
+            let refMarks = marks[ref.id];
+            if (refMarks !== undefined) {
+              if (typeof refMarks === 'number') refMarks = [refMarks];
+              if (!Array.isArray(refMarks)) refMarks = [];
+
+              let sumTestPoints = 0;
+              let hasAnyParticipation = false;
+
+              for (let r = 0; r < totalReps; r++) {
+                const t = refMarks[r];
+                const bestForRep = bestPerRep[r];
+
+                if (t !== undefined && t !== null && t > 0 && bestForRep !== null) {
+                  sumTestPoints += (10 * (bestForRep / t));
+                  hasAnyParticipation = true;
+                } else if (t === null) {
+                  // Si tiene asignada la repetición pero falló / 'X', cuenta participación pero suma 0
+                  hasAnyParticipation = true;
+                }
+              }
+
+              if (hasAnyParticipation) {
+                const testAvgScore = sumTestPoints / totalReps;
+                refereeScores[ref.id].sumPointsBase10 += testAvgScore;
+                refereeScores[ref.id].evaluatedTestsCount += 1;
+              }
             }
           });
         }
