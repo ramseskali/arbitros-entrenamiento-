@@ -1394,6 +1394,50 @@
         `;
       }).join('');
     }
+    // ==========================================
+// 📱 GESTIÓN DE INSTALACIÓN PWA (DESCARGAR APP)
+// ==========================================
+let deferredPrompt = null;
+
+// Escuchar el evento nativo del navegador para instalar como App
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevenir que el navegador muestre el banner por defecto automáticamente
+  e.preventDefault();
+  // Guardar el evento para dispararlo cuando el usuario presione el botón
+  deferredPrompt = e;
+});
+
+async function promptInstallApp() {
+  if (deferredPrompt) {
+    // Si el navegador soporta el diálogo de instalación directa
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+      console.log('El usuario aceptó instalar la aplicación');
+    }
+    deferredPrompt = null;
+  } else {
+    // Si ya está instalada o el navegador no lanza el prompt directo, 
+    // mostramos una guía paso a paso adaptada para Android u otros dispositivos
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    
+    if (isAndroid) {
+      alert(
+        "📲 Para instalar la aplicación en tu dispositivo Android:\n\n" +
+        "1. Toca el menú de los 3 puntos (⋮) en la esquina superior derecha de tu navegador.\n" +
+        "2. Selecciona la opción 'Añadir a la pantalla de inicio' o 'Instalar aplicación'.\n\n" +
+        "¡Listo! Tendrás el acceso directo rápido en tu escritorio."
+      );
+    } else {
+      alert(
+        "ℹ️ Para instalar la aplicación en tu dispositivo:\n\n" +
+        "Abre el menú de tu navegador y busca la opción 'Añadir a la pantalla de inicio' o 'Instalar'."
+      );
+    }
+  }
+}
+    
   </script>
 </body>
 </html>
