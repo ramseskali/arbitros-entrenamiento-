@@ -1009,32 +1009,38 @@
     async function saveMarks() {
       const weekId = document.getElementById('marks-week-id').value;
       const testId = document.getElementById('marks-test-id').value;
+      
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
+      
       const test = (week.tests || []).find(t => t.id === testId);
       if(!test) return;
 
       const totalReps = test.reps || 1;
       const marksObj = {};
 
-      // Recorremos la nómina completa para capturar los checkados
+      // Recorremos toda la nómina de árbitros para asegurar que se guarden los seleccionados
       window.state.referees.forEach(ref => {
         const checkbox = document.getElementById(`check-ref-${ref.id}`);
+        
+        // Si el checkbox existe y está marcado
         if (checkbox && checkbox.checked) {
-          const inputs = document.querySelectorAll(`.mark-input-${ref.id}`);
           let refRepsArr = new Array(totalReps).fill(null);
 
-          inputs.forEach(input => {
-            const repIndex = parseInt(input.getAttribute('data-rep-index'));
-            const valStr = input.value.trim();
-            const valNum = parseFloat(valStr);
+          // Buscamos los inputs de este árbitro en particular (incluso si están renderizados en el DOM)
+          for (let r = 0; r < totalReps; r++) {
+            const input = document.querySelector(`input[data-ref-id="${ref.id}"][data-rep-index="${r}"]`);
+            if (input) {
+              const valStr = input.value.trim();
+              const valNum = parseFloat(valStr);
 
-            if(valStr !== '' && !isNaN(valNum) && valNum > 0) {
-              refRepsArr[repIndex] = valNum;
-            } else {
-              refRepsArr[repIndex] = null; // Falla o X
+              if (valStr !== '' && !isNaN(valNum) && valNum > 0) {
+                refRepsArr[r] = valNum;
+              } else {
+                refRepsArr[ref.id] ? null : null; // Se queda como null (representa 'X' o vacío)
+              }
             }
-          });
+          }
           marksObj[ref.id] = refRepsArr;
         }
       });
@@ -1047,13 +1053,17 @@
       });
 
       try {
-        await window.fb.updateDoc(window.fb.doc(window.fb.db, "weeks", weekId), { tests: updatedTests });
+        await window.fb.updateDoc(window.fb.doc(window.fb.db, "weeks", weekId), {
+          tests: updatedTests
+        });
         showToast('Tiempos guardados con éxito', 'success');
         closeModal('modal-record-marks');
       } catch (err) {
         showToast('Error al guardar marcas: ' + err.message, 'error');
+        console.error(err);
       }
     }
+
 
 
     function populateRankingWeekSelect() {
