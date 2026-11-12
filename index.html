@@ -489,7 +489,7 @@
   </div>
 
 
-  <!-- MODAL: RECORD MARKS (SOPORTA MULTI-TIEMPOS) -->
+  <!-- MODAL: RECORD MARKS (SOPORTA SELECCIÓN INDIVIDUAL Y MULTI-TIEMPOS) -->
   <div id="modal-record-marks" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-4xl w-full overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col">
       <div class="bg-sucre-800 p-4 text-white flex justify-between items-center flex-shrink-0">
@@ -505,7 +505,7 @@
 
       <div class="p-6 overflow-y-auto flex-grow space-y-4">
         <div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded text-xs text-amber-800">
-          <strong>Importante:</strong> Ingresa el tiempo de cada repetición para los árbitros. Deja en blanco si el árbitro no realizó o no completó esa repetición; el sistema colocará una <strong>X</strong> (0 pts) e igual se dividirá entre el total de repeticiones para evaluar su desempeño global.
+          <strong>Instrucciones:</strong> Marca la casilla del árbitro <strong>únicamente si asistió y participó</strong> en esta prueba. Si no se selecciona, no se le computarán notas ni pruebas evaluadas en el ranking.
         </div>
 
 
@@ -514,7 +514,7 @@
 
 
         <div id="marks-input-list" class="space-y-3">
-          <!-- Dynamically filled with multi-rep input controls -->
+          <!-- Dynamically filled with multi-rep input controls & checkboxes -->
         </div>
       </div>
 
@@ -952,7 +952,7 @@
     }
 
 
-    // --- MARKS RECORDING & MULTI-REP CALCULATION ---
+    // --- MARKS RECORDING & SELECCIÓN INDIVIDUAL DE ASISTENCIA ---
     function openRecordMarksModal(weekId, testId) {
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
@@ -978,8 +978,8 @@
       } else {
         window.state.referees.forEach(ref => {
           let refMarks = test.marks && test.marks[ref.id];
+          const hasParticipated = test.marks && test.marks[ref.id] !== undefined;
           
-          // Compatibilidad con datos anteriores que no eran arreglos
           if (typeof refMarks === 'number') {
             refMarks = [refMarks];
           } else if (!Array.isArray(refMarks)) {
@@ -993,20 +993,23 @@
             repInputsHtml += `
               <div class="flex items-center gap-1">
                 <span class="text-[10px] text-slate-400 font-bold">R${r+1}:</span>
-                <input type="number" step="0.01" min="0" placeholder="X" value="${val}" data-ref-id="${ref.id}" data-rep-index="${r}" class="mark-input w-20 px-2 py-1.5 border border-slate-300 rounded text-xs text-right focus:ring-2 focus:ring-sucre-500 outline-none">
+                <input type="number" step="0.01" min="0" placeholder="X" value="${val}" data-ref-id="${ref.id}" data-rep-index="${r}" class="mark-input-${ref.id} mark-input w-20 px-2 py-1.5 border border-slate-300 rounded text-xs text-right focus:ring-2 focus:ring-sucre-500 outline-none">
               </div>
             `;
           }
 
 
           const row = document.createElement('div');
-          row.className = 'flex flex-wrap items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200 gap-3';
+          row.className = 'flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200 gap-3';
           row.innerHTML = `
-            <div class="min-w-[150px]">
-              <p class="font-bold text-xs text-slate-800">${ref.name}</p>
-              <p class="text-[10px] text-slate-500">${ref.category}</p>
+            <div class="flex items-center gap-3">
+              <input type="checkbox" id="check-ref-${ref.id}" ${hasParticipated ? 'checked' : ''} onchange="toggleTestParticipation('${ref.id}')" class="w-4 h-4 text-sucre-600 rounded border-slate-300 focus:ring-sucre-500 cursor-pointer">
+              <div>
+                <p class="font-bold text-xs text-slate-800">${ref.name}</p>
+                <p class="text-[10px] text-slate-500">${ref.category} - <span id="label-part-${ref.id}" class="font-semibold ${hasParticipated ? 'text-emerald-600' : 'text-slate-400'}">${hasParticipated ? 'Asistió / Participó' : 'No seleccionado'}</span></p>
+              </div>
             </div>
-            <div class="flex flex-wrap items-center gap-2">
+            <div id="inputs-box-${ref.id}" class="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-end ${hasParticipated ? '' : 'hidden'}">
               ${repInputsHtml}
               <span class="text-xs text-slate-500 ml-1 font-semibold">${test.unit === 'segundos' ? 's' : 'm'}</span>
             </div>
@@ -1018,6 +1021,27 @@
 
       openModal('modal-record-marks');
     }
+
+
+    // Función auxiliar para mostrar/ocultar campos de tiempo al marcar el checkbox de asistencia
+    window.toggleTestParticipation = function(refId) {
+      const checkbox = document.getElementById(`check-ref-${refId}`);
+      const box = document.getElementById(`inputs-box-${refId}`);
+      const label = document.getElementById(`label-part-${refId}`);
+
+      if (checkbox.checked) {
+        box.classList.remove('hidden');
+        label.textContent = 'Asistió / Participó';
+        label.className = 'font-semibold text-emerald-600';
+      } else {
+        box.classList.add('hidden');
+        label.textContent = 'No seleccionado';
+        label.className = 'font-semibold text-slate-400';
+        // Limpiar inputs si se deselecciona
+        const inputs = document.querySelectorAll(`.mark-input-${refId}`);
+        inputs.forEach(inp => inp.value = '');
+      }
+    };
 
 
     async function saveMarks() {
@@ -1034,26 +1058,31 @@
 
 
       const totalReps = test.reps || 1;
-      const inputs = document.querySelectorAll('.mark-input');
       const marksObj = {};
 
 
-      inputs.forEach(input => {
-        const refId = input.getAttribute('data-ref-id');
-        const repIndex = parseInt(input.getAttribute('data-rep-index'));
-        const val = parseFloat(input.value);
+      // Iteramos sobre todos los árbitros para verificar cuáles fueron seleccionados con el checkbox
+      window.state.referees.forEach(ref => {
+        const checkbox = document.getElementById(`check-ref-${ref.id}`);
+        
+        if (checkbox && checkbox.checked) {
+          const inputs = document.querySelectorAll(`.mark-input-${ref.id}`);
+          let refRepsArr = new Array(totalReps).fill(null);
 
+          inputs.forEach(input => {
+            const repIndex = parseInt(input.getAttribute('data-rep-index'));
+            const val = parseFloat(input.value);
 
-        if(!marksObj[refId]) {
-          marksObj[refId] = new Array(totalReps).fill(null);
+            if(!isNaN(val) && val > 0) {
+              refRepsArr[repIndex] = val;
+            } else {
+              refRepsArr[repIndex] = null; // Representa 'X' o vacío
+            }
+          });
+
+          marksObj[ref.id] = refRepsArr;
         }
-
-
-        if(!isNaN(val) && val > 0) {
-          marksObj[refId][repIndex] = val;
-        } else {
-          marksObj[refId][repIndex] = null; // Representa 'X'
-        }
+        // Si no está chequeado, NO se incluye en marksObj, por lo que no sumará pruebas evaluadas ni notas
       });
 
 
@@ -1266,7 +1295,7 @@
           const registeredRefIds = Object.keys(marks);
 
 
-          // Calcular mejor tiempo por repetición
+          // Calcular mejor tiempo por repetición solo entre los seleccionados
           const bestPerRep = [];
           for (let r = 0; r < totalReps; r++) {
             let validTimesForRep = [];
@@ -1334,7 +1363,7 @@
 
 
           if(registeredRefIds.length === 0) {
-            contentHtml += `<tr><td colspan="${2 + totalReps}" class="py-4 text-center text-slate-400">No se han registrado marcas para esta prueba.</td></tr>`;
+            contentHtml += `<tr><td colspan="${2 + totalReps}" class="py-4 text-center text-slate-400">No hay árbitros registrados como participantes en esta prueba.</td></tr>`;
           } else {
             window.state.referees.forEach(ref => {
               if(marks[ref.id] !== undefined) {
@@ -1357,7 +1386,6 @@
                     sumPoints += points;
                     repTds += `<td class="py-2 px-2 text-center font-mono font-bold text-slate-800">${t} ${test.unit === 'segundos' ? 's' : 'm'}</td>`;
                   } else {
-                    // Si no tiene tiempo o no completó
                     repTds += `<td class="py-2 px-2 text-center font-mono font-bold text-rose-600 bg-rose-50/50" title="No completada">X</td>`;
                   }
                 }
@@ -1401,7 +1429,7 @@
     }
 
 
-    // --- CÁLCULO DEL RANKING SEMANAL CON MULTI-REPETICIONES (CORREGIDO) ---
+    // --- CÁLCULO DEL RANKING SEMANAL (CON FILTRADO ESTRICTO DE ASISTENCIA) ---
     function calculateAndRenderRanking() {
       const tbody = document.getElementById('ranking-table-body');
       if(!tbody) return;
@@ -1469,14 +1497,15 @@
 
 
           filteredReferees.forEach(ref => {
-            let refMarks = marks[ref.id];
-            if (refMarks !== undefined && refMarks !== null) {
+            // SOLO evaluamos al árbitro si explícitamente está en las marcas de esta prueba (es decir, fue seleccionado como asistente)
+            if (marks[ref.id] !== undefined && marks[ref.id] !== null) {
+              let refMarks = marks[ref.id];
               if (typeof refMarks === 'number') refMarks = [refMarks];
               if (!Array.isArray(refMarks)) refMarks = [];
 
 
               let sumTestPoints = 0;
-              let hasAnyParticipation = false;
+              let hasAnyParticipation = true; // Si está seleccionado en las marcas, participó
 
 
               for (let r = 0; r < totalReps; r++) {
@@ -1486,28 +1515,23 @@
 
                 if (t !== undefined && t !== null && t > 0 && bestForRep !== null) {
                   sumTestPoints += (10 * (bestForRep / t));
-                  hasAnyParticipation = true;
-                } else if (t === null) {
-                  // Si tiene asignada la repetición pero falló / 'X', cuenta participación pero suma 0
-                  hasAnyParticipation = true;
+                } else {
+                  // Si no tiene tiempo o es null / X, suma 0 puntos en esa repetición pero cuenta en su prueba
+                  sumTestPoints += 0;
                 }
               }
 
 
-              // SOLO si el árbitro tiene participación real registrada en esta prueba
-              if (hasAnyParticipation) {
-                const testAvgScore = sumTestPoints / totalReps;
-                refereeScores[ref.id].sumPointsBase10 += testAvgScore;
-                refereeScores[ref.id].evaluatedTestsCount += 1;
-              }
+              const testAvgScore = sumTestPoints / totalReps;
+              refereeScores[ref.id].sumPointsBase10 += testAvgScore;
+              refereeScores[ref.id].evaluatedTestsCount += 1;
             }
           });
         }
       });
 
 
-      // CAMBIO CLAVE: Dividimos el acumulado de puntos entre el número de pruebas que SÍ rindió el árbitro (evaluatedTestsCount)
-      // en lugar de dividir entre el total de pruebas de la semana (totalTestsCount).
+      // El promedio semanal se calcula dividiendo estrictamente entre el número de pruebas en las que SÍ participó el árbitro
       const sortedRanking = Object.values(refereeScores).map(item => {
         const weeklyAverage = item.evaluatedTestsCount > 0 ? (item.sumPointsBase10 / item.evaluatedTestsCount) : 0;
         return { ...item, weeklyAverage };
