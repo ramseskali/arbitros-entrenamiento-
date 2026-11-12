@@ -42,14 +42,8 @@
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
-
-
-
   <!-- NOTIFICATION CONTAINER -->
   <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full"></div>
-
-
-
 
   <!-- HEADER / NAVBAR -->
   <header class="bg-gradient-to-r from-sucre-900 via-sucre-800 to-sucre-700 text-white shadow-lg sticky top-0 z-40">
@@ -71,31 +65,20 @@
           </div>
         </div>
 
-
-
-
         <!-- AUTH BUTTONS -->
         <div class="flex items-center space-x-3">
           <div id="user-status-badge" class="hidden sm:flex items-center gap-2 bg-sucre-900/60 text-xs px-3 py-1.5 rounded-full border border-sucre-600">
             <span id="auth-indicator" class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
             <span id="auth-status-text">Modo Lectura</span>
           </div>
-  <button id="btn-install-app" onclick="promptInstallApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg text-sm transition shadow-md flex items-center gap-2">
-    <i class="fa-solid fa-mobile-screen-button"></i>
-    <span class="hidden sm:inline">Descargar App</span>
-  </button>
-
-
-
-
+          <button id="btn-install-app" onclick="promptInstallApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg text-sm transition shadow-md flex items-center gap-2">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+            <span class="hidden sm:inline">Descargar App</span>
+          </button>
           <button id="btn-login-modal" onclick="openLoginModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded-lg text-sm transition shadow-md flex items-center gap-2">
             <i class="fa-solid fa-lock"></i>
             <span>Acceso Admin</span>
           </button>
-
-
-
-
           <button id="btn-logout" onclick="handleLogout()" class="hidden bg-rose-600 hover:bg-rose-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition shadow-md flex items-center gap-2">
             <i class="fa-solid fa-right-from-bracket"></i>
             <span>Cerrar Sesión</span>
@@ -105,14 +88,8 @@
     </div>
   </header>
 
-
-
-
   <!-- MAIN CONTAINER -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
-
-
-
 
     <!-- ADMIN CONTROLS BANNER -->
     <div id="admin-banner" class="hidden mb-8 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm">
@@ -137,9 +114,6 @@
       </div>
     </div>
 
-
-
-
     <!-- TABS NAVIGATION -->
     <div class="flex border-b border-slate-200 mb-6 space-x-2 overflow-x-auto pb-1">
       <button id="tab-btn-ranking" onclick="switchTab('ranking')" class="tab-active py-2.5 px-5 font-bold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 border-sucre-600 text-sucre-700 bg-sucre-50/50">
@@ -156,9 +130,6 @@
       </button>
     </div>
 
-
-
-
     <!-- TAB 1: RANKING SEMANAL -->
     <section id="tab-content-ranking" class="tab-content">
       <div class="bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden">
@@ -171,9 +142,6 @@
             <p class="text-xs text-slate-500">Promedio de las notas individuales (Base 10) por prueba de la semana</p>
           </div>
 
-
-
-
           <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
             <div class="flex items-center gap-2 w-full md:w-auto">
               <label class="text-xs font-bold text-slate-600 whitespace-nowrap">Semana:</label>
@@ -182,9 +150,6 @@
               </select>
             </div>
 
-
-
-
             <div class="flex items-center bg-slate-200 p-1 rounded-lg text-xs font-bold">
               <button onclick="setCategoryFilter('ALL')" id="filter-btn-ALL" class="px-3 py-1 rounded-md transition bg-white text-sucre-700 shadow-sm">Todos</button>
               <button onclick="setCategoryFilter('Sala')" id="filter-btn-Sala" class="px-3 py-1 rounded-md transition text-slate-600 hover:text-sucre-700">Sala</button>
@@ -192,9 +157,6 @@
             </div>
           </div>
         </div>
-
-
-
 
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse text-sm">
@@ -220,9 +182,6 @@
       </div>
     </section>
 
-
-
-
     <!-- TAB 2: PRUEBAS POR SEMANA -->
     <section id="tab-content-weeks" class="tab-content hidden">
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -240,9 +199,6 @@
           </div>
         </div>
 
-
-
-
         <div class="lg:col-span-3 space-y-6">
           <div id="week-detail-container" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div class="text-center py-12 text-slate-400">
@@ -253,9 +209,6 @@
         </div>
       </div>
     </section>
-
-
-
 
     <!-- TAB 3: NÓMINA DE ÁRBITROS -->
     <section id="tab-content-referees" class="tab-content hidden">
@@ -291,13 +244,7 @@
       </div>
     </section>
 
-
-
-
   </main>
-
-
-
 
   <!-- FOOTER -->
   <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800">
@@ -306,9 +253,6 @@
       <p>© 2026 Todos los derechos reservados. Sistema para el control y seguimiento de rendimiento físico.</p>
     </div>
   </footer>
-
-
-
 
   <!-- MODAL: ADMIN LOGIN -->
   <div id="modal-login" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -340,9 +284,6 @@
       </form>
     </div>
   </div>
-
-
-
 
   <!-- MODAL: ADD REFEREE -->
   <div id="modal-add-referee" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -382,9 +323,6 @@
       </form>
     </div>
   </div>
-
-
-
 
   <!-- MODAL: EDIT REFEREE -->
   <div id="modal-edit-referee" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -426,9 +364,6 @@
     </div>
   </div>
 
-
-
-
   <!-- MODAL: ADD WEEK -->
   <div id="modal-add-week" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
@@ -456,9 +391,6 @@
       </form>
     </div>
   </div>
-
-
-
 
   <!-- MODAL: EDIT WEEK -->
   <div id="modal-edit-week" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -488,9 +420,6 @@
       </form>
     </div>
   </div>
-
-
-
 
   <!-- MODAL: ADD TEST -->
   <div id="modal-add-test" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -530,9 +459,6 @@
     </div>
   </div>
 
-
-
-
   <!-- MODAL: RECORD MARKS (CON FILTROS Y SELECCIÓN DE ASISTENCIA) -->
   <div id="modal-record-marks" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-4xl w-full overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col">
@@ -546,24 +472,15 @@
         </button>
       </div>
 
-
-
-
       <div class="p-6 overflow-y-auto flex-grow space-y-4">
         <div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded text-xs text-amber-800">
           <strong>Paso 1:</strong> Selecciona únicamente a los árbitros que asistieron a esta prueba (usa los filtros por categoría o nombre). <strong>Paso 2:</strong> Ingresa sus tiempos o déjalos vacíos/X si no culminaron. Los no seleccionados <strong>no aparecerán en esta prueba ni afectarán su ranking</strong>.
         </div>
 
-
-
-
         <input type="hidden" id="marks-week-id">
         <input type="hidden" id="marks-test-id">
 
-
-
-
-        <!-- CONTROLES DE FILTRRO EN EL MODAL -->
+        <!-- CONTROLES DE FILTRO EN EL MODAL -->
         <div class="flex flex-col sm:flex-row gap-2 justify-between items-center bg-slate-100 p-3 rounded-xl">
           <div class="flex items-center gap-1 w-full sm:w-auto">
             <button type="button" onclick="filterModalCategory('ALL')" id="modal-filter-ALL" class="px-3 py-1 rounded bg-sucre-700 text-white text-xs font-bold shadow-sm">Todos</button>
@@ -575,16 +492,10 @@
           </div>
         </div>
 
-
-
-
         <div id="marks-input-list" class="space-y-3">
           <!-- Dinámico -->
         </div>
       </div>
-
-
-
 
       <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-2 flex-shrink-0">
         <button type="button" onclick="closeModal('modal-record-marks')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg">Cancelar</button>
@@ -592,9 +503,6 @@
       </div>
     </div>
   </div>
-
-
-
 
   <!-- FIREBASE MODULE SCRIPT -->
   <script type="module">
@@ -606,9 +514,6 @@
       getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-
-
-
     const firebaseConfig = {
       apiKey: "AIzaSyBIoz8kDrJXG8Pvnxoh4Lq1vETR0q-h3XE",
       authDomain: "entrenamientos-semanales.firebaseapp.com",
@@ -619,15 +524,9 @@
       measurementId: "G-SZQVHV3NW9"
     };
 
-
-
-
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-
-
-
 
     window.state = {
       isAdmin: false,
@@ -638,13 +537,7 @@
       categoryFilter: 'ALL'
     };
 
-
-
-
     window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, deleteDoc, signInWithEmailAndPassword, signOut };
-
-
-
 
     onAuthStateChanged(auth, (user) => {
       const statusText = document.getElementById('auth-status-text');
@@ -654,9 +547,6 @@
       const adminBanner = document.getElementById('admin-banner');
       const btnAdminAddWeek = document.getElementById('btn-admin-add-week');
       const btnAdminAddRef = document.getElementById('btn-admin-add-ref');
-
-
-
 
       if (user) {
         window.state.isAdmin = true;
@@ -686,9 +576,6 @@
       }
     });
 
-
-
-
     onSnapshot(collection(db, "referees"), (snapshot) => {
       window.state.referees = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       renderReferees();
@@ -698,21 +585,12 @@
       showToast("Error al cargar lista de árbitros", "error");
     });
 
-
-
-
     onSnapshot(collection(db, "weeks"), (snapshot) => {
       window.state.weeks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       window.state.weeks.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
-
-
-
       renderWeeksList();
       populateRankingWeekSelect();
-
-
-
 
       if (!window.state.selectedWeekId && window.state.weeks.length > 0) {
         window.state.selectedWeekId = window.state.weeks[0].id;
@@ -724,13 +602,7 @@
         if(sel) sel.value = window.state.rankingWeekId;
       }
 
-
-
-
       calculateAndRenderRanking();
-
-
-
 
       if (window.state.selectedWeekId) {
         renderWeekDetail(window.state.selectedWeekId);
@@ -739,14 +611,7 @@
       console.error("Error cargando semanas:", error);
       showToast("Error al cargar semanas evaluativas", "error");
     });
-
-
-
-
   </script>
-
-
-
 
   <!-- APPLICATION LOGIC / INTERACTIVE HANDLERS -->
   <script>
@@ -772,32 +637,20 @@
       }, 4000);
     }
 
-
-
-
     function switchTab(tabName) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
       document.getElementById('tab-btn-ranking').className = 'tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 text-slate-500 border-transparent hover:text-sucre-600';
       document.getElementById('tab-btn-weeks').className = 'tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 text-slate-500 border-transparent hover:text-sucre-600';
       document.getElementById('tab-btn-referees').className = 'tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 text-slate-500 border-transparent hover:text-sucre-600';
 
-
-
-
       document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
       const activeBtn = document.getElementById(`tab-btn-${tabName}`);
       activeBtn.className = 'tab-active py-2.5 px-5 font-bold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 border-sucre-600 text-sucre-700 bg-sucre-50/50';
     }
 
-
-
-
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
     function openLoginModal() { openModal('modal-login'); }
-
-
-
 
     async function handleLogin(e) {
       e.preventDefault();
@@ -819,9 +672,6 @@
       }
     }
 
-
-
-
     async function handleLogout() {
       try {
         await window.fb.signOut(window.fb.auth);
@@ -830,9 +680,6 @@
         showToast('Error al cerrar sesión', 'error');
       }
     }
-
-
-
 
     async function handleAddReferee(e) {
       e.preventDefault();
@@ -852,9 +699,6 @@
       }
     }
 
-
-
-
     function openEditRefereeModal(refId) {
       const ref = window.state.referees.find(r => r.id === refId);
       if(!ref) return;
@@ -865,9 +709,6 @@
       document.getElementById('edit-ref-photo').value = ref.photo || '';
       openModal('modal-edit-referee');
     }
-
-
-
 
     async function handleEditReferee(e) {
       e.preventDefault();
@@ -885,9 +726,6 @@
       }
     }
 
-
-
-
     async function deleteReferee(refId) {
       if(!confirm("¿Estás seguro de eliminar este árbitro?")) return;
       try {
@@ -897,9 +735,6 @@
         showToast('Error al eliminar: ' + err.message, 'error');
       }
     }
-
-
-
 
     async function handleAddWeek(e) {
       e.preventDefault();
@@ -915,9 +750,6 @@
       }
     }
 
-
-
-
     function openEditWeekModal(weekId) {
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
@@ -926,9 +758,6 @@
       document.getElementById('edit-week-date').value = week.date || '';
       openModal('modal-edit-week');
     }
-
-
-
 
     async function handleEditWeek(e) {
       e.preventDefault();
@@ -944,9 +773,6 @@
       }
     }
 
-
-
-
     async function deleteWeek(weekId) {
       if(!confirm("¿Estás seguro de eliminar esta semana por completo?")) return;
       try {
@@ -957,9 +783,6 @@
       }
     }
 
-
-
-
     async function handleAddTest(e) {
       e.preventDefault();
       const weekId = document.getElementById('test-week-id').value;
@@ -968,7 +791,6 @@
       const reps = parseInt(document.getElementById('test-reps').value) || 1;
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
-
 
       const newTest = { id: 'test_' + Date.now(), name, unit, reps, marks: {} };
       const updatedTests = [...(week.tests || []), newTest];
@@ -981,9 +803,6 @@
         showToast('Error al agregar prueba', 'error');
       }
     }
-
-
-
 
     async function deleteTest(weekId, testId) {
       if(!confirm("¿Eliminar esta prueba?")) return;
@@ -998,9 +817,6 @@
       }
     }
 
-
-
-
     // --- MODAL DE CARGA DE TIEMPOS CON FILTROS Y SELECCIÓN DE ASISTENCIA ---
     let modalCurrentWeekId = null;
     let modalCurrentTestId = null;
@@ -1008,13 +824,11 @@
     let modalCurrentUnit = 'segundos';
     let modalCategoryFilter = 'ALL';
 
-
     function openRecordMarksModal(weekId, testId) {
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
       const test = (week.tests || []).find(t => t.id === testId);
       if(!test) return;
-
 
       modalCurrentWeekId = weekId;
       modalCurrentTestId = testId;
@@ -1022,29 +836,24 @@
       modalCurrentUnit = test.unit || 'segundos';
       modalCategoryFilter = 'ALL';
 
-
-      // ASIGNACIÓN CORRECTA DE LOS IDs OCULTOS
+      // Asignar IDs de forma segura a los campos ocultos
       document.getElementById('marks-week-id').value = weekId;
       document.getElementById('marks-test-id').value = testId;
-
 
       document.getElementById('modal-search-ref').value = '';
       document.getElementById('record-marks-title').textContent = `Tiempos: ${test.name}`;
       document.getElementById('record-marks-subtitle').textContent = `${week.title} (${modalCurrentUnit}) - ${modalCurrentReps} repetición(es)`;
-
 
       updateModalCategoryBtnUI();
       renderModalRefereeList();
       openModal('modal-record-marks');
     }
 
-
     function filterModalCategory(cat) {
       modalCategoryFilter = cat;
       updateModalCategoryBtnUI();
       renderModalRefereeList();
     }
-
 
     function updateModalCategoryBtnUI() {
       ['ALL', 'Sala', 'Campo'].forEach(c => {
@@ -1059,7 +868,6 @@
       });
     }
 
-
     function renderModalRefereeList() {
       const container = document.getElementById('marks-input-list');
       const searchTerm = document.getElementById('modal-search-ref').value.toLowerCase().trim();
@@ -1070,7 +878,6 @@
       if(!test) return;
       const marksMap = test.marks || {};
 
-
       let refs = window.state.referees;
       if(modalCategoryFilter !== 'ALL') {
         refs = refs.filter(r => r.category === modalCategoryFilter);
@@ -1079,12 +886,10 @@
         refs = refs.filter(r => r.name.toLowerCase().includes(searchTerm) || (r.doc && r.doc.toLowerCase().includes(searchTerm)));
       }
 
-
       if(refs.length === 0) {
         container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">No se encontraron árbitros con los filtros actuales.</p>`;
         return;
       }
-
 
       let html = '';
       refs.forEach(ref => {
@@ -1092,7 +897,6 @@
         let refMarks = isParticipating ? marksMap[ref.id] : Array(modalCurrentReps).fill('');
         if (typeof refMarks === 'number') refMarks = [refMarks];
         if (!Array.isArray(refMarks)) refMarks = Array(modalCurrentReps).fill('');
-
 
         let repsInputsHtml = '';
         for(let r = 0; r < modalCurrentReps; r++) {
@@ -1104,7 +908,6 @@
             </div>
           `;
         }
-
 
         html += `
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200 gap-3">
@@ -1123,16 +926,13 @@
         `;
       });
 
-
       container.innerHTML = html;
     }
-
 
     window.toggleTestParticipation = function(refId) {
       const checkbox = document.getElementById(`check-ref-${refId}`);
       const box = document.getElementById(`inputs-box-${refId}`);
       const label = document.getElementById(`label-part-${refId}`);
-
 
       if (checkbox.checked) {
         box.classList.remove('hidden');
@@ -1146,7 +946,6 @@
         inputs.forEach(inp => inp.value = '');
       }
     };
-
 
     async function saveMarks() {
       const weekId = document.getElementById('marks-week-id').value;
@@ -1163,32 +962,25 @@
       const test = (week.tests || []).find(t => t.id === testId);
       if(!test) return;
 
-
       const totalReps = test.reps || 1;
       const marksObj = {};
 
-
-      // Recorremos todos los árbitros registrados en el sistema globalmente
       window.state.referees.forEach(ref => {
         const checkbox = document.getElementById(`check-ref-${ref.id}`);
         
-        // Verificamos si el árbitro fue seleccionado mediante el checkbox
         if (checkbox && checkbox.checked) {
           let refRepsArr = new Array(totalReps).fill(null);
 
-
           for (let r = 0; r < totalReps; r++) {
-            // Buscamos el input independientemente de los filtros visuales actuales
             const input = document.querySelector(`input[data-ref-id="${ref.id}"][data-rep-index="${r}"]`);
             if (input) {
               const valStr = input.value.trim();
               const valNum = parseFloat(valStr);
 
-
               if (valStr !== '' && !isNaN(valNum) && valNum > 0) {
                 refRepsArr[r] = valNum;
               } else {
-                refRepsArr[r] = null; // Espacio vacío o 'X'
+                refRepsArr[r] = null;
               }
             }
           }
@@ -1196,14 +988,12 @@
         }
       });
 
-
       const updatedTests = (week.tests || []).map(t => {
         if(t.id === testId) {
           return { ...t, marks: marksObj };
         }
         return t;
       });
-
 
       try {
         await window.fb.updateDoc(window.fb.doc(window.fb.db, "weeks", weekId), {
@@ -1217,9 +1007,6 @@
       }
     }
 
-
-
-
     function populateRankingWeekSelect() {
       const select = document.getElementById('ranking-week-select');
       if(!select) return;
@@ -1232,16 +1019,10 @@
       `).join('');
     }
 
-
-
-
     function handleRankingWeekChange(weekId) {
       window.state.rankingWeekId = weekId;
       calculateAndRenderRanking();
     }
-
-
-
 
     function setCategoryFilter(category) {
       window.state.categoryFilter = category;
@@ -1257,9 +1038,6 @@
       });
       calculateAndRenderRanking();
     }
-
-
-
 
     function renderReferees() {
       const tbody = document.getElementById('referees-table-body');
@@ -1292,9 +1070,6 @@
       }).join('');
     }
 
-
-
-
     function renderWeeksList() {
       const container = document.getElementById('weeks-list');
       if(!container) return;
@@ -1317,17 +1092,11 @@
       }).join('');
     }
 
-
-
-
     function selectWeek(weekId) {
       window.state.selectedWeekId = weekId;
       renderWeeksList();
       renderWeekDetail(weekId);
     }
-
-
-
 
     function renderWeekDetail(weekId) {
       const container = document.getElementById('week-detail-container');
@@ -1346,9 +1115,6 @@
         </div>
       ` : '';
 
-
-
-
       let contentHtml = `
         <div class="flex flex-wrap justify-between items-center border-b border-slate-100 pb-4 mb-6 gap-3">
           <div>
@@ -1358,9 +1124,6 @@
           ${adminWeekActions}
         </div>
       `;
-
-
-
 
       if(tests.length === 0) {
         contentHtml += `
@@ -1376,9 +1139,6 @@
           const totalReps = test.reps || 1;
           const registeredRefIds = Object.keys(marks);
 
-
-
-
           const bestPerRep = [];
           for (let r = 0; r < totalReps; r++) {
             let validTimesForRep = [];
@@ -1392,9 +1152,6 @@
             bestPerRep[r] = validTimesForRep.length > 0 ? Math.min(...validTimesForRep) : null;
           }
 
-
-
-
           let adminActionBtns = window.state.isAdmin ? `
             <div class="flex items-center gap-2">
               <button onclick="openRecordMarksModal('${week.id}', '${test.id}')" class="text-xs bg-amber-50 text-amber-700 hover:bg-amber-100 font-bold px-3 py-1.5 rounded-lg border border-amber-200 transition flex items-center gap-1"><i class="fa-solid fa-pen-to-square"></i> Cargar/Editar Marcas</button>
@@ -1402,13 +1159,7 @@
             </div>
           ` : '';
 
-
-
-
           let bestTimesSummary = bestPerRep.map((b, idx) => b !== null ? `R${idx+1}: <strong>${b}${test.unit === 'segundos' ? 's' : 'm'}</strong>` : `R${idx+1}: --`).join(' | ');
-
-
-
 
           contentHtml += `
             <div class="bg-slate-50 rounded-xl border border-slate-200 p-4">
@@ -1440,9 +1191,6 @@
                   <tbody class="divide-y divide-slate-100">
           `;
 
-
-
-
           if(registeredRefIds.length === 0) {
             contentHtml += `<tr><td colspan="${2 + totalReps}" class="py-4 text-center text-slate-400">No hay árbitros con tiempos registrados en esta prueba.</td></tr>`;
           } else {
@@ -1451,9 +1199,6 @@
                 let refMarks = marks[ref.id];
                 if (typeof refMarks === 'number') refMarks = [refMarks];
                 if (!Array.isArray(refMarks)) refMarks = [];
-
-
-
 
                 let sumPoints = 0;
                 let repTds = '';
@@ -1486,32 +1231,20 @@
       container.innerHTML = contentHtml;
     }
 
-
-
-
     function openModalAddTest(weekId) {
       document.getElementById('test-week-id').value = weekId;
       openModal('modal-add-test');
     }
-
-
-
 
     // --- CÁLCULO DEL RANKING SEMANAL ESTRICTO ---
     function calculateAndRenderRanking() {
       const tbody = document.getElementById('ranking-table-body');
       if(!tbody) return;
 
-
-
-
       if(window.state.referees.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No hay árbitros registrados.</td></tr>`;
         return;
       }
-
-
-
 
       const week = window.state.weeks.find(w => w.id === window.state.rankingWeekId);
       if(!week) {
@@ -1519,46 +1252,28 @@
         return;
       }
 
-
-
-
       let filteredReferees = window.state.referees;
       if(window.state.categoryFilter !== 'ALL') {
         filteredReferees = filteredReferees.filter(r => r.category === window.state.categoryFilter);
       }
-
-
-
 
       if(filteredReferees.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No hay árbitros en esta categoría.</td></tr>`;
         return;
       }
 
-
-
-
       const tests = week.tests || [];
       const totalTestsCount = tests.length;
-
-
-
 
       const refereeScores = {};
       filteredReferees.forEach(ref => {
         refereeScores[ref.id] = { referee: ref, sumPointsBase10: 0, evaluatedTestsCount: 0 };
       });
 
-
-
-
       tests.forEach(test => {
         const marks = test.marks || {};
         const totalReps = test.reps || 1;
         const registeredRefIds = Object.keys(marks);
-
-
-
 
         if(registeredRefIds.length > 0) {
           const bestPerRep = [];
@@ -1574,18 +1289,11 @@
             bestPerRep[r] = validTimesForRep.length > 0 ? Math.min(...validTimesForRep) : null;
           }
 
-
-
-
           filteredReferees.forEach(ref => {
-            // SOLO evalúa al árbitro si tiene marcas explícitamente guardadas en esta prueba
             if (marks[ref.id] !== undefined && marks[ref.id] !== null) {
               let refMarks = marks[ref.id];
               if (typeof refMarks === 'number') refMarks = [refMarks];
               if (!Array.isArray(refMarks)) refMarks = [];
-
-
-
 
               let sumTestPoints = 0;
               for (let r = 0; r < totalReps; r++) {
@@ -1594,12 +1302,9 @@
                 if (t !== undefined && t !== null && t > 0 && bestForRep !== null) {
                   sumTestPoints += (10 * (bestForRep / t));
                 } else {
-                  sumTestPoints += 0; // X o vacío suma 0
+                  sumTestPoints += 0;
                 }
               }
-
-
-
 
               const testAvgScore = sumTestPoints / totalReps;
               refereeScores[ref.id].sumPointsBase10 += testAvgScore;
@@ -1609,16 +1314,10 @@
         }
       });
 
-
-
-
       const sortedRanking = Object.values(refereeScores).map(item => {
         const weeklyAverage = item.evaluatedTestsCount > 0 ? (item.sumPointsBase10 / item.evaluatedTestsCount) : 0;
         return { ...item, weeklyAverage };
       }).sort((a, b) => b.weeklyAverage - a.weeklyAverage);
-
-
-
 
       tbody.innerHTML = sortedRanking.map((item, index) => {
         const rank = index + 1;
@@ -1627,16 +1326,10 @@
         if(rank === 2) badge = `<span class="w-7 h-7 bg-slate-300 text-slate-800 rounded-full inline-flex items-center justify-center font-black text-xs shadow">2</span>`;
         if(rank === 3) badge = `<span class="w-7 h-7 bg-amber-700 text-white rounded-full inline-flex items-center justify-center font-black text-xs shadow">3</span>`;
 
-
-
-
         let positionDisplay = badge;
         if(item.referee.photo && item.referee.photo.trim() !== '') {
           positionDisplay = `<img src="${item.referee.photo}" alt="${item.referee.name}" class="w-9 h-9 rounded-full object-cover mx-auto border-2 border-amber-400 shadow-sm" title="Posición #${rank}">`;
         }
-
-
-
 
         return `
           <tr class="hover:bg-slate-50 transition border-b border-slate-100">
@@ -1658,17 +1351,11 @@
       }).join('');
     }
 
-
-
-
     let deferredPrompt = null;
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
     });
-
-
-
 
     async function promptInstallApp() {
       if (deferredPrompt) {
