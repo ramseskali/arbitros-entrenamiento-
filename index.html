@@ -499,7 +499,7 @@
   </div>
 
   <!-- FIREBASE MODULE SCRIPT -->
-  <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { 
       getFirestore, collection, getDocs, addDoc, doc, updateDoc, deleteDoc, setDoc, onSnapshot, query, orderBy, serverTimestamp 
@@ -575,6 +575,281 @@
       }
     });
 
+    // --- MODAL DE CARGA DE TIEMPOS CON SELECCIÓN INDIVIDUAL ---
+    let currentModalReps = 1;
+    window.openRecordMarksModal = async function(weekId, testId, testName, reps = 1) {
+      currentModalReps = parseInt(reps) || 1;
+      document.getElementById('marks-week-id').value = weekId;
+      document.getElementById('marks-test-id').value = testId;
+      document.getElementById('record-marks-title').textContent = `Cargar Tiempos: ${testName}`;
+      
+      const listContainer = document.getElementById('marks-input-list');
+      listContainer.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Cargando árbitros...</p>';
+      openModal('modal-record-marks');
+
+      try {
+        const marksSnap = await getDocs(collection(db, `weeks/${weekId}/tests/${testId}/marks`));
+        let existingMarks = {};
+        marksSnap.forEach(doc => { existingMarks[doc.id] = doc.data().reps || []; });
+
+        let html = '';
+        if (window.state.referees.length === 0) {
+          listContainer.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">No hay árbitros registrados en la nómina.</p>';
+          return;
+        }
+
+        window.state.referees.forEach(ref => {
+          const isParticipating = existingMarks[ref.id] !== undefined;
+          const refReps = isParticipating ? existingMarks[ref.id] : Array(currentModalReps).fill('');
+
+          let repsInputs = '';
+          for (let i = 0; i < currentModalReps; i++) {
+            let val = refReps[i] !== undefined ? refReps[i] : '';
+            repsInputs += `
+              <div class="flex flex-col items-center">
+                <span class="text-[10px] font-bold text-slate-500 mb-0.5">Rep #${i+1}</span>
+                <input type="text" data-ref="${ref.id}" data-rep="${i}" value="${val}" placeholder="Ej. 12.5 o X" 
+                       class="mark-rep-input-${ref.id} mark-rep-input w-20 px-2 py-1.5 border border-slate-300 rounded text-center text-xs focus:ring-2 focus:ring-sucre-500 outline-none">
+              </div>
+            `;
+          }
+
+          html += `
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2 ref-mark-container" data-ref-id="${ref.id}">
+              <div class="flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                  <input type="checkbox" id="check-mark-${ref.id}" ${isParticipating ? 'checked' : ''} onchange="toggleMarkParticipation('${ref.id}')" class="w-4 h-4 text-sucre-600 rounded border-slate-300 focus:ring-sucre-500">
+                  <img src="${ref.photo || 'https://ui-avatars.com/api/?name='+encodeURIComponent(ref.name)}" class="w-9 h-9 rounded-full object-cover">
+                  <div>
+                    <h5 class="font-bold text-xs text-slate-800">${ref.name}</h5>
+                    <span class="text-[10px] text-slate-500">${ref.category}</span>
+                  </div>
+                </div>
+                <span class="text-[11px] font-medium text-slate-500 participation-label">${isParticipating ? 'Participó' : 'No seleccionado'}</span>
+              </div>
+              <div id="reps-mark-box-${ref.id}" class="flex flex-wrap gap-2 items-center justify-end pt-2 border-t border-slate-200 ${isParticipating ? '' : 'hidden'}">
+                ${repsInputs}
+              </div>
+            </div>
+          `;
+        });
+
+        listContainer.innerHTML = html;
+      } catch (err) {
+        console.error("Error al abrir modal de marcas:", err);
+        listContainer.innerHTML = '<p class="text-xs text-rose-500 text-center py-4">Error al cargar árbitros.</p>';
+      }
+    };
+
+    window.toggleMarkParticipation = function(refId) {
+      const checkbox = document.getElementById(`check-mark-${refId}`);
+      const repsBox = document.getElementById(`reps-mark-box-${refId}`);
+      const label = repsBox.previousElementSibling.querySelector('.participation-label');
+
+      if(checkbox.checked) {
+        repsBox.classList.remove('hidden');
+        label.textContent = 'Participó';
+      } else {
+        repsBox.classList.add('hidden');
+        label.textContent = 'No seleccionado';
+        const inputs = document.querySelectorAll(`.mark-rep-input-${refId}`);
+        inputs.forEach(inp => inp.value = '');
+      }
+    };
+
+    window.saveMarks = async function() {
+      const weekId = document.getElementById('marks-week-id').value;
+      const testId = document.getElementById('marks-test-id').value;
+
+      try {
+        for (const ref of window.state.referees) {
+          const checkbox = document.getElementById(`check-mark-${ref.id}`);
+          const markDocRef = doc(db, `weeks/${weekId}/tests/${testId}/marks`, ref.id);
+
+          if (checkbox && checkbox.checked) {
+            const inputs = document.querySelectorAll(`.mark-rep-input-${ref.id}`);
+            let repsData = [];
+            inputs.forEach(inp => repsData.push(inp.value.trim()));
+            await setDoc(markDocRef, { reps: repsData, updatedAt: serverTimestamp() });
+          } else {
+            await deleteDoc(markDocRef).catch(() => {});
+          }
+        }
+
+        if(typeof closeModal === 'function') closeModal('modal-record-marks');
+        if(typeof showToast === 'function') showToast("Calificaciones guardadas exitosamente", "success");
+        calculateAndRenderRanking();
+      } catch (err) {
+        console.error("Error al guardar marcas:", err);
+        if(typeof showToast === 'function') showToast("Error al guardar calificaciones", "error");
+      }
+    };
+
+    // --- CÁLCULO DE RANKING CON FILTRADO DE NO PARTICIPANTES Y "X" ---
+    window.calculateAndRenderRanking = async function() {
+      const weekId = window.state.rankingWeekId || window.state.selectedWeekId;
+      const tbody = document.getElementById('ranking-table-body');
+      if (!tbody) return;
+
+      if (!weekId) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">Selecciona una semana para ver el ranking.</td></tr>`;
+        return;
+      }
+
+      try {
+        const testsSnap = await getDocs(collection(db, `weeks/${weekId}/tests`));
+        if (testsSnap.empty) {
+          tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No hay pruebas configuradas en esta semana.</td></tr>`;
+          return;
+        }
+
+        let testList = [];
+        for(let tDoc of testsSnap.docs) {
+          let tData = tDoc.data();
+          let tId = tDoc.id;
+          let marksSnap = await getDocs(collection(db, `weeks/${weekId}/tests/${tId}/marks`));
+          let marksMap = {};
+          marksSnap.forEach(s => { marksMap[s.id] = s.data().reps || []; });
+          testList.push({ id: tId, ...tData, marksMap });
+        }
+
+        let refereeStats = {};
+        window.state.referees.forEach(r => {
+          refereeStats[r.id] = { referee: r, totalTestsEvaluated: 0, sumTestScores: 0 };
+        });
+
+        testList.forEach(test => {
+          const repsCount = test.reps || 1;
+          const isTime = test.type === 'time';
+
+          let bestPerRep = Array(repsCount).fill(null);
+          
+          for(let i=0; i<repsCount; i++) {
+            let bestVal = null;
+            for(let rId in test.marksMap) {
+              let repsData = test.marksMap[rId];
+              let valStr = repsData[i];
+              if(valStr !== undefined && valStr !== '' && valStr.toUpperCase() !== 'X') {
+                let num = parseFloat(valStr);
+                if(!isNaN(num)) {
+                  if(bestVal === null) {
+                    bestVal = num;
+                  } else {
+                    if(isTime) {
+                      if(num < bestVal) bestVal = num;
+                    } else {
+                      if(num > bestVal) bestVal = num;
+                    }
+                  }
+                }
+              }
+            }
+            bestPerRep[i] = bestVal;
+          }
+
+          for(let rId in test.marksMap) {
+            let repsData = test.marksMap[rId];
+            if(!repsData) continue;
+
+            let repScoresSum = 0;
+            let validRepCount = repsCount;
+
+            for(let i=0; i<repsCount; i++) {
+              let valStr = repsData[i];
+              let repScore = 0;
+
+              if(valStr && valStr.toUpperCase() !== 'X') {
+                let num = parseFloat(valStr);
+                let best = bestPerRep[i];
+                if(!isNaN(num) && best !== null && best !== 0) {
+                  if(isTime) {
+                    repScore = 10 * (best / num);
+                  } else {
+                    repScore = 10 * (num / best);
+                  }
+                  if(repScore > 10) repScore = 10;
+                }
+              } else {
+                repScore = 0;
+              }
+              repScoresSum += repScore;
+            }
+
+            let testFinalScore = repScoresSum / validRepCount;
+
+            if(refereeStats[rId]) {
+              refereeStats[rId].totalTestsEvaluated += 1;
+              refereeStats[rId].sumTestScores += testFinalScore;
+            }
+          }
+        });
+
+        let rankingArray = [];
+        for(let rId in refereeStats) {
+          let stat = refereeStats[rId];
+          if(stat.totalTestsEvaluated > 0) {
+            let weeklyAverage = stat.sumTestScores / stat.totalTestsEvaluated;
+            rankingArray.push({
+              referee: stat.referee,
+              testsCount: stat.totalTestsEvaluated,
+              weeklyAverage: weeklyAverage
+            });
+          }
+        }
+
+        if(window.state.categoryFilter && window.state.categoryFilter !== 'ALL') {
+          rankingArray = rankingArray.filter(item => item.referee.category === window.state.categoryFilter);
+        }
+
+        rankingArray.sort((a, b) => b.weeklyAverage - a.weeklyAverage);
+
+        if(rankingArray.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No hay calificaciones registradas para esta semana o filtro.</td></tr>`;
+          return;
+        }
+
+        let html = '';
+        rankingArray.forEach((item, index) => {
+          let pos = index + 1;
+          let badgeColor = "bg-slate-100 text-slate-700";
+          if(pos === 1) badgeColor = "bg-amber-500 text-white shadow";
+          else if(pos === 2) badgeColor = "bg-slate-300 text-slate-900";
+          else if(pos === 3) badgeColor = "bg-amber-700 text-white";
+
+          let photoUrl = item.referee.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(item.referee.name)}&background=035388&color=fff`;
+
+          html += `
+            <tr class="hover:bg-slate-50 transition">
+              <td class="py-4 px-4 text-center font-bold">
+                <span class="w-7 h-7 rounded-full inline-flex items-center justify-center text-xs ${badgeColor}">${pos}</span>
+              </td>
+              <td class="py-4 px-4 flex items-center gap-3">
+                <img src="${photoUrl}" alt="${item.referee.name}" class="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm flex-shrink-0">
+                <div>
+                  <div class="font-bold text-slate-900">${item.referee.name}</div>
+                  <div class="text-xs text-slate-400">ID: ${item.referee.doc || 'S/C'}</div>
+                </div>
+              </td>
+              <td class="py-4 px-4 text-center">
+                <span class="px-2.5 py-1 rounded-full text-xs font-bold ${item.referee.category === 'Sala' ? 'bg-sky-100 text-sky-800' : 'bg-emerald-100 text-emerald-800'}">${item.referee.category}</span>
+              </td>
+              <td class="py-4 px-4 text-center text-xs font-semibold text-slate-600">
+                ${item.testsCount} prueba(s)
+              </td>
+              <td class="py-4 px-4 text-right pr-6 font-black text-sucre-800 text-base">
+                ${item.weeklyAverage.toFixed(2)} <span class="text-xs font-normal text-slate-400">/ 10</span>
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+
+      } catch(err) {
+        console.error("Error calculando ranking:", err);
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-rose-500">Error al calcular el ranking.</td></tr>`;
+      }
+    };
+
     // --- REALTIME DATA LISTENERS ---
     
     // Listen for Referees
@@ -616,6 +891,7 @@
     });
 
   </script>
+
 
   <!-- APPLICATION LOGIC / INTERACTIVE HANDLERS -->
   <script>
