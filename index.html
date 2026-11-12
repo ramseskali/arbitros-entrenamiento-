@@ -1267,7 +1267,39 @@
       document.getElementById('test-week-id').value = weekId;
       openModal('modal-add-test');
     }
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    
+    if (isAndroid) {
+      alert(
+        "📲 Para instalar la aplicación en tu dispositivo Android:\n\n" +
+        "1. Toca el menú de los 3 puntos (⋮) en la esquina superior derecha de tu navegador.\n" +
+        "2. Selecciona la opción 'Añadir a la pantalla de inicio' o 'Instalar aplicación'.\n\n" +
+        "¡Listo! Tendrás el acceso directo rápido en tu escritorio."
+      );
+    // --- CÁLCULO DEL RANKING SEMANAL CON MULTI-REPETICIONES ---
+    function calculateAndRenderRanking() {
+      const tbody = document.getElementById('ranking-table-body');
+      if(!tbody) return;
 
+      if(window.state.referees.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No hay árbitros registrados para generar la tabla.</td></tr>`;
+        return;
+      }
+
+      const week = window.state.weeks.find(w => w.id === window.state.rankingWeekId);
+      if(!week) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">Selecciona una semana activa para consultar la clasificación.</td></tr>`;
+        return;
+      }
+
+      let filteredReferees = window.state.referees;
+      if(window.state.categoryFilter !== 'ALL') {
+        filteredReferees = filteredReferees.filter(r => r.category === window.state.categoryFilter);
+      }
+
+      if(filteredReferees.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No hay árbitros registrados en la categoría ${window.state.categoryFilter}.</td></tr>`;
+        return;
     // --- CÁLCULO DEL RANKING SEMANAL CON MULTI-REPETICIONES ---
     function calculateAndRenderRanking() {
       const tbody = document.getElementById('ranking-table-body');
@@ -1328,12 +1360,15 @@
 
           filteredReferees.forEach(ref => {
             let refMarks = marks[ref.id];
-            if (refMarks !== undefined) {
+            
+            // CORRECCIÓN: Si el árbitro no tiene registro guardado en esta prueba, se omite por completo
+            if (refMarks !== undefined && refMarks !== null) {
               if (typeof refMarks === 'number') refMarks = [refMarks];
               if (!Array.isArray(refMarks)) refMarks = [];
 
               let sumTestPoints = 0;
               let hasAnyParticipation = false;
+              let hasValidTimeOrX = false;
 
               for (let r = 0; r < totalReps; r++) {
                 const t = refMarks[r];
@@ -1342,13 +1377,16 @@
                 if (t !== undefined && t !== null && t > 0 && bestForRep !== null) {
                   sumTestPoints += (10 * (bestForRep / t));
                   hasAnyParticipation = true;
+                  hasValidTimeOrX = true;
                 } else if (t === null) {
-                  // Si tiene asignada la repetición pero falló / 'X', cuenta participación pero suma 0
+                  // Si tiene asignada la repetición pero falló / 'X'
                   hasAnyParticipation = true;
+                  hasValidTimeOrX = true;
                 }
               }
 
-              if (hasAnyParticipation) {
+              // Solo cuenta si el árbitro realmente participó en esta prueba
+              if (hasAnyParticipation && hasValidTimeOrX) {
                 const testAvgScore = sumTestPoints / totalReps;
                 refereeScores[ref.id].sumPointsBase10 += testAvgScore;
                 refereeScores[ref.id].evaluatedTestsCount += 1;
@@ -1358,8 +1396,9 @@
         }
       });
 
+      // CORRECCIÓN: El promedio semanal se calcula dividiendo entre las pruebas que SÍ evaluó el árbitro
       const sortedRanking = Object.values(refereeScores).map(item => {
-        const weeklyAverage = totalTestsCount > 0 ? (item.sumPointsBase10 / totalTestsCount) : 0;
+        const weeklyAverage = item.evaluatedTestsCount > 0 ? (item.sumPointsBase10 / item.evaluatedTestsCount) : 0;
         return { ...item, weeklyAverage };
       }).sort((a, b) => b.weeklyAverage - a.weeklyAverage);
 
@@ -1394,6 +1433,8 @@
         `;
       }).join('');
     }
+
+    }
     // ==========================================
 // 📱 GESTIÓN DE INSTALACIÓN PWA (DESCARGAR APP)
 // ==========================================
@@ -1420,15 +1461,7 @@ async function promptInstallApp() {
   } else {
     // Si ya está instalada o el navegador no lanza el prompt directo, 
     // mostramos una guía paso a paso adaptada para Android u otros dispositivos
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    
-    if (isAndroid) {
-      alert(
-        "📲 Para instalar la aplicación en tu dispositivo Android:\n\n" +
-        "1. Toca el menú de los 3 puntos (⋮) en la esquina superior derecha de tu navegador.\n" +
-        "2. Selecciona la opción 'Añadir a la pantalla de inicio' o 'Instalar aplicación'.\n\n" +
-        "¡Listo! Tendrás el acceso directo rápido en tu escritorio."
-      );
+no
     } else {
       alert(
         "ℹ️ Para instalar la aplicación en tu dispositivo:\n\n" +
