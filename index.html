@@ -1006,6 +1006,7 @@
       }
     };
 
+    
     async function saveMarks() {
       const weekId = document.getElementById('marks-week-id').value;
       const testId = document.getElementById('marks-test-id').value;
@@ -1019,16 +1020,17 @@
       const totalReps = test.reps || 1;
       const marksObj = {};
 
-      // Recorremos toda la nómina de árbitros para asegurar que se guarden los seleccionados
+      // Recorremos todos los árbitros registrados en el sistema
       window.state.referees.forEach(ref => {
         const checkbox = document.getElementById(`check-ref-${ref.id}`);
         
-        // Si el checkbox existe y está marcado
+        // Verificamos si el árbitro fue seleccionado (asistió)
         if (checkbox && checkbox.checked) {
           let refRepsArr = new Array(totalReps).fill(null);
 
-          // Buscamos los inputs de este árbitro en particular (incluso si están renderizados en el DOM)
+          // Capturamos cada repetición de forma individual y segura
           for (let r = 0; r < totalReps; r++) {
+            // Buscamos el input correspondiente a este árbitro y repetición
             const input = document.querySelector(`input[data-ref-id="${ref.id}"][data-rep-index="${r}"]`);
             if (input) {
               const valStr = input.value.trim();
@@ -1037,12 +1039,13 @@
               if (valStr !== '' && !isNaN(valNum) && valNum > 0) {
                 refRepsArr[r] = valNum;
               } else {
-                refRepsArr[ref.id] ? null : null; // Se queda como null (representa 'X' o vacío)
+                refRepsArr[r] = null; // Si está vacío o tiene 'X'
               }
             }
           }
           marksObj[ref.id] = refRepsArr;
         }
+        // Si el checkbox no está marcado, NO se añade a marksObj, por lo que no existirá en Firebase ni afectará el ranking
       });
 
       const updatedTests = (week.tests || []).map(t => {
