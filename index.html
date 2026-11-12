@@ -42,8 +42,10 @@
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
+
   <!-- NOTIFICATION CONTAINER -->
   <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full"></div>
+
 
   <!-- HEADER / NAVBAR -->
   <header class="bg-gradient-to-r from-sucre-900 via-sucre-800 to-sucre-700 text-white shadow-lg sticky top-0 z-40">
@@ -65,6 +67,7 @@
           </div>
         </div>
 
+
         <!-- AUTH BUTTONS -->
         <div class="flex items-center space-x-3">
           <div id="user-status-badge" class="hidden sm:flex items-center gap-2 bg-sucre-900/60 text-xs px-3 py-1.5 rounded-full border border-sucre-600">
@@ -77,10 +80,12 @@
     <span class="hidden sm:inline">Descargar App</span>
   </button>
 
+
           <button id="btn-login-modal" onclick="openLoginModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded-lg text-sm transition shadow-md flex items-center gap-2">
             <i class="fa-solid fa-lock"></i>
             <span>Acceso Admin</span>
           </button>
+
 
           <button id="btn-logout" onclick="handleLogout()" class="hidden bg-rose-600 hover:bg-rose-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition shadow-md flex items-center gap-2">
             <i class="fa-solid fa-right-from-bracket"></i>
@@ -91,8 +96,10 @@
     </div>
   </header>
 
+
   <!-- MAIN CONTAINER -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
 
     <!-- ADMIN CONTROLS BANNER -->
     <div id="admin-banner" class="hidden mb-8 bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl shadow-sm">
@@ -117,6 +124,7 @@
       </div>
     </div>
 
+
     <!-- TABS NAVIGATION -->
     <div class="flex border-b border-slate-200 mb-6 space-x-2 overflow-x-auto pb-1">
       <button id="tab-btn-ranking" onclick="switchTab('ranking')" class="tab-active py-2.5 px-5 font-bold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 border-sucre-600 text-sucre-700 bg-sucre-50/50">
@@ -133,6 +141,7 @@
       </button>
     </div>
 
+
     <!-- TAB 1: RANKING SEMANAL -->
     <section id="tab-content-ranking" class="tab-content">
       <div class="bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden">
@@ -145,6 +154,7 @@
             <p class="text-xs text-slate-500">Promedio de las notas individuales (Base 10) por prueba de la semana</p>
           </div>
 
+
           <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
             <div class="flex items-center gap-2 w-full md:w-auto">
               <label class="text-xs font-bold text-slate-600 whitespace-nowrap">Semana:</label>
@@ -153,6 +163,7 @@
               </select>
             </div>
 
+
             <div class="flex items-center bg-slate-200 p-1 rounded-lg text-xs font-bold">
               <button onclick="setCategoryFilter('ALL')" id="filter-btn-ALL" class="px-3 py-1 rounded-md transition bg-white text-sucre-700 shadow-sm">Todos</button>
               <button onclick="setCategoryFilter('Sala')" id="filter-btn-Sala" class="px-3 py-1 rounded-md transition text-slate-600 hover:text-sucre-700">Sala</button>
@@ -160,6 +171,7 @@
             </div>
           </div>
         </div>
+
 
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse text-sm">
@@ -185,6 +197,7 @@
       </div>
     </section>
 
+
     <!-- TAB 2: PRUEBAS POR SEMANA -->
     <section id="tab-content-weeks" class="tab-content hidden">
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -202,6 +215,7 @@
           </div>
         </div>
 
+
         <div class="lg:col-span-3 space-y-6">
           <div id="week-detail-container" class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
             <div class="text-center py-12 text-slate-400">
@@ -212,6 +226,7 @@
         </div>
       </div>
     </section>
+
 
     <!-- TAB 3: NÓMINA DE ÁRBITROS -->
     <section id="tab-content-referees" class="tab-content hidden">
@@ -247,7 +262,9 @@
       </div>
     </section>
 
+
   </main>
+
 
   <!-- FOOTER -->
   <footer class="bg-slate-900 text-slate-400 text-xs py-6 mt-12 border-t border-slate-800">
@@ -256,6 +273,7 @@
       <p>© 2026 Todos los derechos reservados. Sistema para el control y seguimiento de rendimiento físico.</p>
     </div>
   </footer>
+
 
   <!-- MODAL: ADMIN LOGIN -->
   <div id="modal-login" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -287,6 +305,7 @@
       </form>
     </div>
   </div>
+
 
   <!-- MODAL: ADD REFEREE -->
   <div id="modal-add-referee" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -326,6 +345,7 @@
       </form>
     </div>
   </div>
+
 
   <!-- MODAL: EDIT REFEREE -->
   <div id="modal-edit-referee" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -367,6 +387,7 @@
     </div>
   </div>
 
+
   <!-- MODAL: ADD WEEK -->
   <div id="modal-add-week" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-md w-full overflow-hidden border border-slate-100">
@@ -394,6 +415,7 @@
       </form>
     </div>
   </div>
+
 
   <!-- MODAL: EDIT WEEK -->
   <div id="modal-edit-week" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -423,6 +445,7 @@
       </form>
     </div>
   </div>
+
 
   <!-- MODAL: ADD TEST (SOPORTA CANTIDAD DE REPETICIONES) -->
   <div id="modal-add-test" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
@@ -465,6 +488,7 @@
     </div>
   </div>
 
+
   <!-- MODAL: RECORD MARKS (SOPORTA MULTI-TIEMPOS) -->
   <div id="modal-record-marks" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
     <div class="bg-white rounded-2xl shadow-xl max-w-4xl w-full overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col">
@@ -478,18 +502,22 @@
         </button>
       </div>
 
+
       <div class="p-6 overflow-y-auto flex-grow space-y-4">
         <div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded text-xs text-amber-800">
           <strong>Importante:</strong> Ingresa el tiempo de cada repetición para los árbitros. Deja en blanco si el árbitro no realizó o no completó esa repetición; el sistema colocará una <strong>X</strong> (0 pts) e igual se dividirá entre el total de repeticiones para evaluar su desempeño global.
         </div>
 
+
         <input type="hidden" id="marks-week-id">
         <input type="hidden" id="marks-test-id">
+
 
         <div id="marks-input-list" class="space-y-3">
           <!-- Dynamically filled with multi-rep input controls -->
         </div>
       </div>
+
 
       <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-2 flex-shrink-0">
         <button type="button" onclick="closeModal('modal-record-marks')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold rounded-lg">Cancelar</button>
@@ -497,6 +525,7 @@
       </div>
     </div>
   </div>
+
 
   <!-- FIREBASE MODULE SCRIPT -->
   <script type="module">
@@ -507,6 +536,7 @@
     import { 
       getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
 
     // CREDECIALES CONFIGURADAS DEL USUARIO
     const firebaseConfig = {
@@ -519,10 +549,12 @@
       measurementId: "G-SZQVHV3NW9"
     };
 
+
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
+
 
     // Global State
     window.state = {
@@ -534,8 +566,10 @@
       categoryFilter: 'ALL'
     };
 
+
     // Make DB and Auth actions globally available
     window.fb = { db, auth, addDoc, collection, doc, setDoc, updateDoc, deleteDoc, signInWithEmailAndPassword, signOut };
+
 
     // --- AUTH LISTENERS ---
     onAuthStateChanged(auth, (user) => {
@@ -546,6 +580,7 @@
       const adminBanner = document.getElementById('admin-banner');
       const btnAdminAddWeek = document.getElementById('btn-admin-add-week');
       const btnAdminAddRef = document.getElementById('btn-admin-add-ref');
+
 
       if (user) {
         window.state.isAdmin = true;
@@ -575,6 +610,7 @@
       }
     });
 
+
     // --- REALTIME DATA LISTENERS ---
     
     // Listen for Referees
@@ -587,13 +623,16 @@
       showToast("Error al cargar lista de árbitros", "error");
     });
 
+
     // Listen for Weeks
     onSnapshot(collection(db, "weeks"), (snapshot) => {
       window.state.weeks = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       window.state.weeks.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
+
       renderWeeksList();
       populateRankingWeekSelect();
+
 
       if (!window.state.selectedWeekId && window.state.weeks.length > 0) {
         window.state.selectedWeekId = window.state.weeks[0].id;
@@ -605,7 +644,9 @@
         if(sel) sel.value = window.state.rankingWeekId;
       }
 
+
       calculateAndRenderRanking();
+
 
       if (window.state.selectedWeekId) {
         renderWeekDetail(window.state.selectedWeekId);
@@ -615,7 +656,9 @@
       showToast("Error al cargar semanas evaluativas", "error");
     });
 
+
   </script>
+
 
   <!-- APPLICATION LOGIC / INTERACTIVE HANDLERS -->
   <script>
@@ -639,11 +682,13 @@
         toast.classList.remove('translate-y-2', 'opacity-0');
       }, 10);
 
+
       setTimeout(() => {
         toast.classList.add('opacity-0');
         setTimeout(() => toast.remove(), 300);
       }, 4000);
     }
+
 
     function switchTab(tabName) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
@@ -652,22 +697,27 @@
       document.getElementById('tab-btn-weeks').className = 'tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 text-slate-500 border-transparent hover:text-sucre-600';
       document.getElementById('tab-btn-referees').className = 'tab-inactive py-2.5 px-5 font-semibold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 text-slate-500 border-transparent hover:text-sucre-600';
 
+
       document.getElementById(`tab-content-${tabName}`).classList.remove('hidden');
       const activeBtn = document.getElementById(`tab-btn-${tabName}`);
       activeBtn.className = 'tab-active py-2.5 px-5 font-bold text-sm rounded-t-lg transition flex items-center gap-2 border-b-2 border-sucre-600 text-sucre-700 bg-sucre-50/50';
     }
 
+
     function openModal(id) {
       document.getElementById(id).classList.remove('hidden');
     }
+
 
     function closeModal(id) {
       document.getElementById(id).classList.add('hidden');
     }
 
+
     function openLoginModal() {
       openModal('modal-login');
     }
+
 
     // --- AUTH ACTIONS ---
     async function handleLogin(e) {
@@ -675,6 +725,7 @@
       const email = document.getElementById('login-email').value;
       const pass = document.getElementById('login-password').value;
       const btn = document.getElementById('btn-submit-login');
+
 
       try {
         btn.disabled = true;
@@ -691,6 +742,7 @@
       }
     }
 
+
     async function handleLogout() {
       try {
         await window.fb.signOut(window.fb.auth);
@@ -700,6 +752,7 @@
       }
     }
 
+
     // --- REFEREE HANDLERS (ADD, EDIT, DELETE) ---
     async function handleAddReferee(e) {
       e.preventDefault();
@@ -707,6 +760,7 @@
       const category = document.getElementById('ref-category').value;
       const doc = document.getElementById('ref-doc').value || 'Sin DNI';
       const photo = document.getElementById('ref-photo').value || '';
+
 
       try {
         await window.fb.addDoc(window.fb.collection(window.fb.db, "referees"), {
@@ -720,9 +774,11 @@
       }
     }
 
+
     function openEditRefereeModal(refId) {
       const ref = window.state.referees.find(r => r.id === refId);
       if(!ref) return;
+
 
       document.getElementById('edit-ref-id').value = ref.id;
       document.getElementById('edit-ref-name').value = ref.name || '';
@@ -730,8 +786,10 @@
       document.getElementById('edit-ref-doc').value = ref.doc || '';
       document.getElementById('edit-ref-photo').value = ref.photo || '';
 
+
       openModal('modal-edit-referee');
     }
+
 
     async function handleEditReferee(e) {
       e.preventDefault();
@@ -740,6 +798,7 @@
       const category = document.getElementById('edit-ref-category').value;
       const doc = document.getElementById('edit-ref-doc').value;
       const photo = document.getElementById('edit-ref-photo').value;
+
 
       try {
         await window.fb.updateDoc(window.fb.doc(window.fb.db, "referees", refId), {
@@ -752,6 +811,7 @@
       }
     }
 
+
     async function deleteReferee(refId) {
       if(!confirm("¿Estás seguro de eliminar este árbitro de la nómina? Se perderán sus vínculos en pruebas.")) return;
       try {
@@ -762,11 +822,13 @@
       }
     }
 
+
     // --- WEEKS HANDLERS ---
     async function handleAddWeek(e) {
       e.preventDefault();
       const title = document.getElementById('week-title').value;
       const date = document.getElementById('week-date').value;
+
 
       try {
         await window.fb.addDoc(window.fb.collection(window.fb.db, "weeks"), {
@@ -780,22 +842,27 @@
       }
     }
 
+
     function openEditWeekModal(weekId) {
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
+
 
       document.getElementById('edit-week-id').value = week.id;
       document.getElementById('edit-week-title').value = week.title || '';
       document.getElementById('edit-week-date').value = week.date || '';
 
+
       openModal('modal-edit-week');
     }
+
 
     async function handleEditWeek(e) {
       e.preventDefault();
       const weekId = document.getElementById('edit-week-id').value;
       const title = document.getElementById('edit-week-title').value;
       const date = document.getElementById('edit-week-date').value;
+
 
       try {
         await window.fb.updateDoc(window.fb.doc(window.fb.doc(window.fb.db, "weeks", weekId)), {
@@ -808,8 +875,10 @@
       }
     }
 
+
     async function deleteWeek(weekId) {
       if(!confirm("¿Estás seguro de eliminar esta semana evaluativa por completo? Se borrarán todas sus pruebas y marcas asociadas.")) return;
+
 
       try {
         await window.fb.deleteDoc(window.fb.doc(window.fb.db, "weeks", weekId));
@@ -822,6 +891,7 @@
       }
     }
 
+
     // --- TESTS HANDLERS ---
     async function handleAddTest(e) {
       e.preventDefault();
@@ -830,8 +900,10 @@
       const unit = document.getElementById('test-unit').value;
       const reps = parseInt(document.getElementById('test-reps').value) || 1;
 
+
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
+
 
       const newTest = {
         id: 'test_' + Date.now(),
@@ -841,7 +913,9 @@
         marks: {} // Estructura: { [refereeId]: [rep1, rep2, rep3, ...] }
       };
 
+
       const updatedTests = [...(week.tests || []), newTest];
+
 
       try {
         await window.fb.updateDoc(window.fb.doc(window.fb.db, "weeks", weekId), {
@@ -855,13 +929,17 @@
       }
     }
 
+
     async function deleteTest(weekId, testId) {
       if(!confirm("¿Estás seguro de que deseas eliminar esta prueba de la semana?")) return;
+
 
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
 
+
       const updatedTests = (week.tests || []).filter(t => t.id !== testId);
+
 
       try {
         await window.fb.updateDoc(window.fb.doc(window.fb.db, "weeks", weekId), {
@@ -873,6 +951,7 @@
       }
     }
 
+
     // --- MARKS RECORDING & MULTI-REP CALCULATION ---
     function openRecordMarksModal(weekId, testId) {
       const week = window.state.weeks.find(w => w.id === weekId);
@@ -880,15 +959,19 @@
       const test = (week.tests || []).find(t => t.id === testId);
       if(!test) return;
 
+
       const totalReps = test.reps || 1;
+
 
       document.getElementById('marks-week-id').value = weekId;
       document.getElementById('marks-test-id').value = testId;
       document.getElementById('record-marks-title').textContent = `Tiempos: ${test.name}`;
       document.getElementById('record-marks-subtitle').textContent = `${week.title} (${test.unit}) - ${totalReps} repetición(es)`;
 
+
       const container = document.getElementById('marks-input-list');
       container.innerHTML = '';
+
 
       if(window.state.referees.length === 0) {
         container.innerHTML = `<p class="text-xs text-slate-500 py-4 text-center">No existen árbitros registrados para asignar tiempos.</p>`;
@@ -903,6 +986,7 @@
             refMarks = [];
           }
 
+
           let repInputsHtml = '';
           for(let r = 0; r < totalReps; r++) {
             const val = (refMarks[r] !== undefined && refMarks[r] !== null) ? refMarks[r] : '';
@@ -913,6 +997,7 @@
               </div>
             `;
           }
+
 
           const row = document.createElement('div');
           row.className = 'flex flex-wrap items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200 gap-3';
@@ -930,31 +1015,39 @@
         });
       }
 
+
       openModal('modal-record-marks');
     }
+
 
     async function saveMarks() {
       const weekId = document.getElementById('marks-week-id').value;
       const testId = document.getElementById('marks-test-id').value;
 
+
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) return;
+
 
       const test = (week.tests || []).find(t => t.id === testId);
       if(!test) return;
 
+
       const totalReps = test.reps || 1;
       const inputs = document.querySelectorAll('.mark-input');
       const marksObj = {};
+
 
       inputs.forEach(input => {
         const refId = input.getAttribute('data-ref-id');
         const repIndex = parseInt(input.getAttribute('data-rep-index'));
         const val = parseFloat(input.value);
 
+
         if(!marksObj[refId]) {
           marksObj[refId] = new Array(totalReps).fill(null);
         }
+
 
         if(!isNaN(val) && val > 0) {
           marksObj[refId][repIndex] = val;
@@ -963,12 +1056,14 @@
         }
       });
 
+
       const updatedTests = (week.tests || []).map(t => {
         if(t.id === testId) {
           return { ...t, marks: marksObj };
         }
         return t;
       });
+
 
       try {
         await window.fb.updateDoc(window.fb.doc(window.fb.db, "weeks", weekId), {
@@ -981,25 +1076,30 @@
       }
     }
 
+
     // --- CONTROLES DE SEMANA Y FILTROS DEL RANKING ---
     function populateRankingWeekSelect() {
       const select = document.getElementById('ranking-week-select');
       if(!select) return;
+
 
       if(window.state.weeks.length === 0) {
         select.innerHTML = `<option value="">Sin semanas</option>`;
         return;
       }
 
+
       select.innerHTML = window.state.weeks.map(w => `
         <option value="${w.id}" ${w.id === window.state.rankingWeekId ? 'selected' : ''}>${w.title}</option>
       `).join('');
     }
 
+
     function handleRankingWeekChange(weekId) {
       window.state.rankingWeekId = weekId;
       calculateAndRenderRanking();
     }
+
 
     function setCategoryFilter(category) {
       window.state.categoryFilter = category;
@@ -1016,16 +1116,20 @@
       calculateAndRenderRanking();
     }
 
+
     // --- RENDERING FUNCTIONS ---
+
 
     function renderReferees() {
       const tbody = document.getElementById('referees-table-body');
       if(!tbody) return;
 
+
       if(window.state.referees.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">No hay árbitros registrados en el sistema.</td></tr>`;
         return;
       }
+
 
       tbody.innerHTML = window.state.referees.map(ref => {
         let adminActionTd = window.state.isAdmin ? `
@@ -1041,9 +1145,11 @@
           </td>
         ` : '';
 
+
         let avatarHtml = ref.photo && ref.photo.trim() !== '' 
           ? `<img src="${ref.photo}" class="w-8 h-8 rounded-full object-cover border border-slate-300 shadow-sm">`
           : `<div class="w-8 h-8 rounded-full bg-sucre-100 text-sucre-800 font-bold flex items-center justify-center text-xs">${ref.name.charAt(0)}</div>`;
+
 
         return `
           <tr class="hover:bg-slate-50 transition">
@@ -1066,14 +1172,17 @@
       }).join('');
     }
 
+
     function renderWeeksList() {
       const container = document.getElementById('weeks-list');
       if(!container) return;
+
 
       if(window.state.weeks.length === 0) {
         container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">No hay semanas evaluativas registradas.</p>`;
         return;
       }
+
 
       container.innerHTML = window.state.weeks.map(w => {
         const isSelected = w.id === window.state.selectedWeekId;
@@ -1092,15 +1201,18 @@
       }).join('');
     }
 
+
     function selectWeek(weekId) {
       window.state.selectedWeekId = weekId;
       renderWeeksList();
       renderWeekDetail(weekId);
     }
 
+
     function renderWeekDetail(weekId) {
       const container = document.getElementById('week-detail-container');
       if(!container) return;
+
 
       const week = window.state.weeks.find(w => w.id === weekId);
       if(!week) {
@@ -1108,7 +1220,9 @@
         return;
       }
 
+
       const tests = week.tests || [];
+
 
       let adminWeekActions = window.state.isAdmin ? `
         <div class="flex items-center gap-2">
@@ -1124,6 +1238,7 @@
         </div>
       ` : '';
 
+
       let contentHtml = `
         <div class="flex flex-wrap justify-between items-center border-b border-slate-100 pb-4 mb-6 gap-3">
           <div>
@@ -1133,6 +1248,7 @@
           ${adminWeekActions}
         </div>
       `;
+
 
       if(tests.length === 0) {
         contentHtml += `
@@ -1149,6 +1265,7 @@
           const totalReps = test.reps || 1;
           const registeredRefIds = Object.keys(marks);
 
+
           // Calcular mejor tiempo por repetición
           const bestPerRep = [];
           for (let r = 0; r < totalReps; r++) {
@@ -1163,6 +1280,7 @@
             bestPerRep[r] = validTimesForRep.length > 0 ? Math.min(...validTimesForRep) : null;
           }
 
+
           let adminActionBtns = window.state.isAdmin ? `
             <div class="flex items-center gap-2">
               <button onclick="openRecordMarksModal('${week.id}', '${test.id}')" class="text-xs bg-amber-50 text-amber-700 hover:bg-amber-100 font-bold px-3 py-1.5 rounded-lg border border-amber-200 transition flex items-center gap-1">
@@ -1174,7 +1292,9 @@
             </div>
           ` : '';
 
+
           let bestTimesSummary = bestPerRep.map((b, idx) => b !== null ? `R${idx+1}: <strong>${b}${test.unit === 'segundos' ? 's' : 'm'}</strong>` : `R${idx+1}: --`).join(' | ');
+
 
           contentHtml += `
             <div class="bg-slate-50 rounded-xl border border-slate-200 p-4">
@@ -1191,12 +1311,14 @@
                 ${adminActionBtns}
               </div>
 
+
               ${registeredRefIds.length > 0 ? `
                 <div class="mb-3 text-xs bg-emerald-50 text-emerald-800 p-2 rounded-lg border border-emerald-100 flex items-center gap-2">
                   <i class="fa-solid fa-trophy text-amber-500"></i>
                   <span><strong>Mejores Marcas por Repetición:</strong> ${bestTimesSummary}</span>
                 </div>
               ` : ''}
+
 
               <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs bg-white rounded-lg border border-slate-200 overflow-hidden">
@@ -1210,6 +1332,7 @@
                   <tbody class="divide-y divide-slate-100">
           `;
 
+
           if(registeredRefIds.length === 0) {
             contentHtml += `<tr><td colspan="${2 + totalReps}" class="py-4 text-center text-slate-400">No se han registrado marcas para esta prueba.</td></tr>`;
           } else {
@@ -1219,12 +1342,15 @@
                 if (typeof refMarks === 'number') refMarks = [refMarks];
                 if (!Array.isArray(refMarks)) refMarks = [];
 
+
                 let sumPoints = 0;
                 let repTds = '';
+
 
                 for (let r = 0; r < totalReps; r++) {
                   const t = refMarks[r];
                   const bestForRep = bestPerRep[r];
+
 
                   if (t !== undefined && t !== null && t > 0 && bestForRep !== null) {
                     const points = (10 * (bestForRep / t));
@@ -1236,7 +1362,9 @@
                   }
                 }
 
+
                 const finalTestAvg = totalReps > 0 ? (sumPoints / totalReps) : 0;
+
 
                 contentHtml += `
                   <tr>
@@ -1249,6 +1377,7 @@
             });
           }
 
+
           contentHtml += `
                   </tbody>
                 </table>
@@ -1257,26 +1386,32 @@
           `;
         });
 
+
         contentHtml += `</div>`;
       }
 
+
       container.innerHTML = contentHtml;
     }
+
 
     function openModalAddTest(weekId) {
       document.getElementById('test-week-id').value = weekId;
       openModal('modal-add-test');
     }
 
-    // --- CÁLCULO DEL RANKING SEMANAL CON MULTI-REPETICIONES ---
+
+    // --- CÁLCULO DEL RANKING SEMANAL CON MULTI-REPETICIONES (CORREGIDO) ---
     function calculateAndRenderRanking() {
       const tbody = document.getElementById('ranking-table-body');
       if(!tbody) return;
+
 
       if(window.state.referees.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No hay árbitros registrados para generar la tabla.</td></tr>`;
         return;
       }
+
 
       const week = window.state.weeks.find(w => w.id === window.state.rankingWeekId);
       if(!week) {
@@ -1284,18 +1419,22 @@
         return;
       }
 
+
       let filteredReferees = window.state.referees;
       if(window.state.categoryFilter !== 'ALL') {
         filteredReferees = filteredReferees.filter(r => r.category === window.state.categoryFilter);
       }
+
 
       if(filteredReferees.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No hay árbitros registrados en la categoría ${window.state.categoryFilter}.</td></tr>`;
         return;
       }
 
+
       const tests = week.tests || [];
       const totalTestsCount = tests.length;
+
 
       const refereeScores = {};
       filteredReferees.forEach(ref => {
@@ -1306,10 +1445,12 @@
         };
       });
 
+
       tests.forEach(test => {
         const marks = test.marks || {};
         const totalReps = test.reps || 1;
         const registeredRefIds = Object.keys(marks);
+
 
         if(registeredRefIds.length > 0) {
           // Obtener la mejor marca global por repetición
@@ -1326,18 +1467,22 @@
             bestPerRep[r] = validTimesForRep.length > 0 ? Math.min(...validTimesForRep) : null;
           }
 
+
           filteredReferees.forEach(ref => {
             let refMarks = marks[ref.id];
-            if (refMarks !== undefined) {
+            if (refMarks !== undefined && refMarks !== null) {
               if (typeof refMarks === 'number') refMarks = [refMarks];
               if (!Array.isArray(refMarks)) refMarks = [];
+
 
               let sumTestPoints = 0;
               let hasAnyParticipation = false;
 
+
               for (let r = 0; r < totalReps; r++) {
                 const t = refMarks[r];
                 const bestForRep = bestPerRep[r];
+
 
                 if (t !== undefined && t !== null && t > 0 && bestForRep !== null) {
                   sumTestPoints += (10 * (bestForRep / t));
@@ -1348,6 +1493,8 @@
                 }
               }
 
+
+              // SOLO si el árbitro tiene participación real registrada en esta prueba
               if (hasAnyParticipation) {
                 const testAvgScore = sumTestPoints / totalReps;
                 refereeScores[ref.id].sumPointsBase10 += testAvgScore;
@@ -1358,10 +1505,14 @@
         }
       });
 
+
+      // CAMBIO CLAVE: Dividimos el acumulado de puntos entre el número de pruebas que SÍ rindió el árbitro (evaluatedTestsCount)
+      // en lugar de dividir entre el total de pruebas de la semana (totalTestsCount).
       const sortedRanking = Object.values(refereeScores).map(item => {
-        const weeklyAverage = totalTestsCount > 0 ? (item.sumPointsBase10 / totalTestsCount) : 0;
+        const weeklyAverage = item.evaluatedTestsCount > 0 ? (item.sumPointsBase10 / item.evaluatedTestsCount) : 0;
         return { ...item, weeklyAverage };
       }).sort((a, b) => b.weeklyAverage - a.weeklyAverage);
+
 
       tbody.innerHTML = sortedRanking.map((item, index) => {
         const rank = index + 1;
@@ -1370,10 +1521,12 @@
         if(rank === 2) badge = `<span class="w-7 h-7 bg-slate-300 text-slate-800 rounded-full inline-flex items-center justify-center font-black text-xs shadow">2</span>`;
         if(rank === 3) badge = `<span class="w-7 h-7 bg-amber-700 text-white rounded-full inline-flex items-center justify-center font-black text-xs shadow">3</span>`;
 
+
         let positionDisplay = badge;
         if(item.referee.photo && item.referee.photo.trim() !== '') {
           positionDisplay = `<img src="${item.referee.photo}" alt="${item.referee.name}" class="w-9 h-9 rounded-full object-cover mx-auto border-2 border-amber-400 shadow-sm" title="Posición #${rank}">`;
         }
+
 
         return `
           <tr class="hover:bg-slate-50 transition border-b border-slate-100">
@@ -1399,6 +1552,7 @@
 // ==========================================
 let deferredPrompt = null;
 
+
 // Escuchar el evento nativo del navegador para instalar como App
 window.addEventListener('beforeinstallprompt', (e) => {
   // Prevenir que el navegador muestre el banner por defecto automáticamente
@@ -1406,6 +1560,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
   // Guardar el evento para dispararlo cuando el usuario presione el botón
   deferredPrompt = e;
 });
+
 
 async function promptInstallApp() {
   if (deferredPrompt) {
