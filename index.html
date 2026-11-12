@@ -65,17 +65,17 @@
           </div>
         </div>
 
-        <!-- AUTH BUTTONS & INSTALL APP -->
-        <div class="flex items-center space-x-2 sm:space-x-3">
+        <!-- AUTH BUTTONS -->
+        <div class="flex items-center space-x-3">
           <div id="user-status-badge" class="hidden sm:flex items-center gap-2 bg-sucre-900/60 text-xs px-3 py-1.5 rounded-full border border-sucre-600">
             <span id="auth-indicator" class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
             <span id="auth-status-text">Modo Lectura</span>
           </div>
-          
-          <button id="btn-install-app" onclick="promptInstallApp()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg text-sm transition shadow-md flex items-center gap-2">
-            <i class="fa-solid fa-mobile-screen-button"></i>
-            <span class="hidden sm:inline">Descargar App</span>
-          </button>
+            <!-- 🟢 BOTÓN NUEVO: DESCARGAR APP / INSTALAR -->
+  <button id="btn-install-app" onclick="promptInstallApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg text-sm transition shadow-md flex items-center gap-2">
+    <i class="fa-solid fa-mobile-screen-button"></i>
+    <span class="hidden sm:inline">Descargar App</span>
+  </button>
 
           <button id="btn-login-modal" onclick="openLoginModal()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded-lg text-sm transition shadow-md flex items-center gap-2">
             <i class="fa-solid fa-lock"></i>
@@ -360,4 +360,4 @@
           <input type="url" id="edit-ref-photo" placeholder="https://ejemplo.com/foto.jpg" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-sucre-500 outline-none">
         </div>
         <div class="pt-2 flex justify-end gap-2">
-         
+          <button type="
