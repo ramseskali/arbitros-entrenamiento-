@@ -1,6 +1,6 @@
 // Archivo: funciones.js
 
-export function openExportPdfModal() {
+function openExportPdfModal() {
   const pdfSelect = document.getElementById('pdf-export-week');
   if (pdfSelect) {
     if (window.state.weeks.length === 0) {
@@ -11,13 +11,12 @@ export function openExportPdfModal() {
       ).join('');
     }
   }
-  // Suponiendo que la función openModal está disponible globalmente en tu app
   if (typeof openModal === 'function') {
     openModal('modal-export-pdf');
   }
 }
 
-export function generatePdfReport() {
+function generatePdfReport() {
   const weekId = document.getElementById('pdf-export-week').value;
   const category = document.getElementById('pdf-export-category').value;
   
