@@ -1653,5 +1653,15 @@
       }
     }
   </script>
+  <script type="module">
+  //importar pdf
+  import { generarReportePDFSemanal } from './funciones.js';
+
+    window.miFuncionGlobal = function() {
+    const semana = document.getElementById('pdf-export-week').value;
+    const categoria = document.getElementById('pdf-export-category').value;
+    generarReportePDFSemanal(semana, categoria);
+  };
+</script>
 </body>
 </html>
