@@ -1,18 +1,21 @@
-// Archivo: funciones.js (SIN la palabra export en ninguna parte)
+// Archivo: funciones.js
 
 function openExportPdfModal() {
   const pdfSelect = document.getElementById('pdf-export-week');
   if (pdfSelect) {
-    if (window.state.weeks.length === 0) {
-      pdfSelect.innerHTML = '<option value="">Sin semanas</option>';
-    } else {
+    if (window.state && window.state.weeks && window.state.weeks.length > 0) {
       pdfSelect.innerHTML = window.state.weeks.map(w => 
         `<option value="${w.id}" ${w.id === window.state.rankingWeekId ? 'selected' : ''}>${w.title} (${w.date || 'Sin fecha'})</option>`
       ).join('');
+    } else {
+      pdfSelect.innerHTML = '<option value="">Sin semanas registradas</option>';
     }
   }
-  if (typeof openModal === 'function') {
-    openModal('modal-export-pdf');
+  
+  // Abrir el modal de forma segura buscando el elemento por ID directamente
+  const modal = document.getElementById('modal-export-pdf');
+  if (modal) {
+    modal.classList.remove('hidden');
   }
 }
 
@@ -20,13 +23,18 @@ function generatePdfReport() {
   const weekId = document.getElementById('pdf-export-week').value;
   const category = document.getElementById('pdf-export-category').value;
   
-  const week = window.state.weeks.find(w => w.id === weekId);
-  if (!week) {
-    if (typeof showToast === 'function') showToast('Selecciona una semana válida', 'error');
+  if (!window.state || !window.state.weeks) {
+    alert('Error: Datos no cargados todavía.');
     return;
   }
 
-  let filteredReferees = window.state.referees;
+  const week = window.state.weeks.find(w => w.id === weekId);
+  if (!week) {
+    alert('Selecciona una semana válida');
+    return;
+  }
+
+  let filteredReferees = window.state.referees || [];
   if (category !== 'ALL') {
     filteredReferees = filteredReferees.filter(r => r.category === category);
   }
@@ -159,7 +167,8 @@ function generatePdfReport() {
   `);
   printWindow.document.close();
   
-  if (typeof closeModal === 'function') {
-    closeModal('modal-export-pdf');
+  const modal = document.getElementById('modal-export-pdf');
+  if (modal) {
+    modal.classList.add('hidden');
   }
 }
