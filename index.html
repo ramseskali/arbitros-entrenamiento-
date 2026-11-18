@@ -1658,6 +1658,13 @@
     }
   
   </script>
- 
+ <script type="module">
+  // Importar de funciones.js
+  import { openExportPdfModal, generatePdfReport } from './funciones.js';
+
+  // Las asignas al objeto global window para que los botones onclick del HTML las reconozcan
+  window.openExportPdfModal = openExportPdfModal;
+  window.generatePdfReport = generatePdfReport;
+</script>
 </body>
 </html>
