@@ -1,4 +1,4 @@
-// Archivo: funciones.js
+// Archivo: funciones.js (SIN la palabra export en ninguna parte)
 
 function openExportPdfModal() {
   const pdfSelect = document.getElementById('pdf-export-week');
